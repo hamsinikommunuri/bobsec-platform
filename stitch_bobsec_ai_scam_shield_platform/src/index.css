@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #0d0e0f;
+    color: #e3e2e3;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Precision instrument selection */
+  ::selection {
+    background: #8cebff;
+    color: #00363e;
+  }
+}
+
+/* Hide standard scrollbars for sleek instrument aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(18, 19, 21, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(135, 147, 149, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(135, 147, 149, 0.6);
+}
+
+/* Subtle glow animations */
+@keyframes beacon-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.1); }
+}
+
+.animate-beacon {
+  animation: beacon-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

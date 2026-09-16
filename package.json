@@ -1,0 +1,25 @@
+{
+  "name": "bobsec-platform",
+  "version": "1.0.0",
+  "description": "BobSec — AI Scam Shield for Indian Users",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix stitch_bobsec_ai_scam_shield_platform run dev",
+    "build": "npm --prefix server run build && npm --prefix stitch_bobsec_ai_scam_shield_platform run build",
+    "test": "npm --prefix server test",
+    "start": "npm --prefix server start"
+  },
+  "workspaces": [
+    "server",
+    "stitch_bobsec_ai_scam_shield_platform"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
