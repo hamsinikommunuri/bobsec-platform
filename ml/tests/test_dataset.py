@@ -75,3 +75,38 @@ def test_provenance_and_synthetic_ratio():
     synthetic_count = (df["is_synthetic"] == True).sum()
     real_percentage = (real_count / len(df)) * 100
     assert real_percentage >= 90.0, f"Expected >= 90% real/public data, got {real_percentage:.2f}%"
+
+def test_no_exact_duplicates_across_splits():
+    train_df = pd.read_csv(TRAIN_SPLIT_PATH)
+    val_df = pd.read_csv(VAL_SPLIT_PATH)
+    test_df = pd.read_csv(TEST_SPLIT_PATH)
+    
+    train_texts = set(train_df["text"])
+    val_texts = set(val_df["text"])
+    test_texts = set(test_df["text"])
+    
+    assert len(train_texts.intersection(test_texts)) == 0, "Exact text duplicates detected between train and test splits"
+    assert len(train_texts.intersection(val_texts)) == 0, "Exact text duplicates detected between train and val splits"
+    assert len(val_texts.intersection(test_texts)) == 0, "Exact text duplicates detected between val and test splits"
+
+def test_class_distributions_are_valid():
+    df = pd.read_csv(DATASET_PATH)
+    benign_ratio = (df["label"] == 0).mean()
+    scam_ratio = (df["label"] == 1).mean()
+    # Ensure reasonable balance: both between 35% and 65%
+    assert 0.35 <= benign_ratio <= 0.65, f"Benign ratio {benign_ratio:.2f} out of reasonable bounds"
+    assert 0.35 <= scam_ratio <= 0.65, f"Scam ratio {scam_ratio:.2f} out of reasonable bounds"
+
+def test_test_set_not_used_for_tuning():
+    import json
+    from ml.src.model_config import THRESHOLD_PATH, METADATA_PATH
+    
+    if THRESHOLD_PATH.exists():
+        with open(THRESHOLD_PATH, "r", encoding="utf-8") as f:
+            thresh_meta = json.load(f)
+        assert thresh_meta.get("calibrated_on") == "validation_split", "Decision threshold was not calibrated on validation split"
+        
+    if METADATA_PATH.exists():
+        with open(METADATA_PATH, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+        assert meta["training_results"]["held_out_test_samples"] >= 500, "Test set size invalid in metadata"

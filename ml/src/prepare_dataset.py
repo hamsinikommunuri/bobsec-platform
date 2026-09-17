@@ -101,33 +101,72 @@ def split_group_aware_3way(
     val_fraction_of_train: float = 0.12,
     random_state: int = 42
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Splits dataset into Train, Validation, and Test partitions with ZERO source-group leakage."""
-    # Step 1: Separate Train+Val and held-out Test partition
-    gss_test = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=random_state)
-    train_val_idx, test_idx = next(gss_test.split(df, groups=df["source_group"]))
+    """Splits dataset into Train, Validation, and Test partitions with ZERO source-group leakage
+    and stratified representation across all language and label combinations.
+    """
+    rng = np.random.RandomState(random_state)
     
-    train_val_df = df.iloc[train_val_idx].reset_index(drop=True)
-    test_df = df.iloc[test_idx].reset_index(drop=True)
+    # Determine the primary (language, label) for each source group to enable balanced stratification
+    group_meta = df.groupby("source_group").agg({
+        "language": lambda s: s.mode()[0],
+        "label": lambda s: s.mode()[0],
+        "text": "count"
+    }).rename(columns={"text": "count"}).reset_index()
     
-    # Step 2: Separate Train and Validation partitions from Train+Val
-    gss_val = GroupShuffleSplit(n_splits=1, test_size=val_fraction_of_train, random_state=random_state)
-    train_idx, val_idx = next(gss_val.split(train_val_df, groups=train_val_df["source_group"]))
+    train_groups: List[str] = []
+    val_groups: List[str] = []
+    test_groups: List[str] = []
     
-    train_df = train_val_df.iloc[train_idx].reset_index(drop=True)
-    val_df = train_val_df.iloc[val_idx].reset_index(drop=True)
+    for (lang, lbl), g in group_meta.groupby(["language", "label"]):
+        groups = g["source_group"].tolist()
+        rng.shuffle(groups)
+        n = len(groups)
+        if n == 1:
+            train_groups.extend(groups)
+        elif n == 2:
+            train_groups.append(groups[0])
+            test_groups.append(groups[1])
+        elif n == 3:
+            train_groups.append(groups[0])
+            train_groups.append(groups[1])
+            test_groups.append(groups[2])
+        elif n == 4:
+            train_groups.append(groups[0])
+            train_groups.append(groups[1])
+            val_groups.append(groups[2])
+            test_groups.append(groups[3])
+        elif n == 5:
+            train_groups.extend(groups[:3])
+            val_groups.append(groups[3])
+            test_groups.append(groups[4])
+        else:
+            n_test = int(round(test_size * n))
+            n_val = int(round(val_fraction_of_train * n))
+            n_train = n - n_test - n_val
+            train_groups.extend(groups[:n_train])
+            val_groups.extend(groups[n_train:n_train + n_val])
+            test_groups.extend(groups[n_train + n_val:])
+            
+    train_df = df[df["source_group"].isin(train_groups)].reset_index(drop=True)
+    val_df = df[df["source_group"].isin(val_groups)].reset_index(drop=True)
+    test_df = df[df["source_group"].isin(test_groups)].reset_index(drop=True)
     
-    # Step 3: Strict mathematical assertion of zero data leakage
-    train_groups = set(train_df["source_group"])
-    val_groups = set(val_df["source_group"])
-    test_groups = set(test_df["source_group"])
+    # Mathematical proof of zero leakage: group intersection must be strictly empty
+    train_g_set = set(train_groups)
+    val_g_set = set(val_groups)
+    test_g_set = set(test_groups)
     
-    leakage_train_test = train_groups.intersection(test_groups)
-    leakage_train_val = train_groups.intersection(val_groups)
-    leakage_val_test = val_groups.intersection(test_groups)
+    assert len(train_g_set.intersection(test_g_set)) == 0, f"CRITICAL LEAKAGE train-test: {train_g_set.intersection(test_g_set)}"
+    assert len(train_g_set.intersection(val_g_set)) == 0, f"CRITICAL LEAKAGE train-val: {train_g_set.intersection(val_g_set)}"
+    assert len(val_g_set.intersection(test_g_set)) == 0, f"CRITICAL LEAKAGE val-test: {val_g_set.intersection(test_g_set)}"
     
-    assert len(leakage_train_test) == 0, f"CRITICAL LEAKAGE train-test: {leakage_train_test}"
-    assert len(leakage_train_val) == 0, f"CRITICAL LEAKAGE train-val: {leakage_train_val}"
-    assert len(leakage_val_test) == 0, f"CRITICAL LEAKAGE val-test: {leakage_val_test}"
+    # Assert zero exact duplicate texts across splits
+    train_texts = set(train_df["text"])
+    val_texts = set(val_df["text"])
+    test_texts = set(test_df["text"])
+    assert len(train_texts.intersection(test_texts)) == 0, "CRITICAL TEXT LEAKAGE train-test"
+    assert len(train_texts.intersection(val_texts)) == 0, "CRITICAL TEXT LEAKAGE train-val"
+    assert len(val_texts.intersection(test_texts)) == 0, "CRITICAL TEXT LEAKAGE val-test"
     
     return train_df, val_df, test_df
 
@@ -255,27 +294,50 @@ def prepare_and_save_dataset() -> pd.DataFrame:
     test_df.to_csv(ARTIFACTS_DIR / "test_split.csv", index=False)
     
     # 5. Generate Machine-Readable Summaries
-    real_count = int((clean_df["is_synthetic"] == False).sum())
+    # Provenance categorisation: public datasets/telemetry vs manually curated threat vectors vs synthetic
+    public_sources = {"uci_sms_corpus", "cert_in_and_i4c_telemetry"}
+    curated_sources = {"curated_cyber_threat_intelligence", "curated_indian_telecom_banking", "curated_multilingual_indian_corpus"}
+    
+    real_public_count = int(clean_df["source"].isin(public_sources).sum())
+    manual_curated_count = int(clean_df["source"].isin(curated_sources).sum())
     synth_count = int((clean_df["is_synthetic"] == True).sum())
+    total_samples = int(len(clean_df))
+    
+    lang_counts = clean_df["language"].value_counts().to_dict()
+    other_lang_counts = {k: int(lang_counts.get(k, 0)) for k in ["ta", "te", "kn", "ml"]}
     
     summary = {
         "dataset_name": "BobSec Indian & Multilingual Scam Detection Corpus (Expanded Academic Release v2)",
-        "total_dataset_size": int(len(clean_df)),
+        "total_dataset_size": total_samples,
         "training_samples": int(len(train_df)),
         "validation_samples": int(len(val_df)),
         "test_samples": int(len(test_df)),
+        "benign_count": int((clean_df["label"] == 0).sum()),
+        "scam_count": int((clean_df["label"] == 1).sum()),
         "benign_samples": int((clean_df["label"] == 0).sum()),
         "scam_samples": int((clean_df["label"] == 1).sum()),
-        "real_public_samples": real_count,
-        "real_public_percentage": round(real_count / len(clean_df) * 100, 2),
-        "synthetic_samples": synth_count,
-        "synthetic_percentage": round(synth_count / len(clean_df) * 100, 2),
-        "unique_source_groups": int(clean_df["source_group"].nunique()),
-        "exact_duplicates_removed": int(exact_dupes_removed),
-        "near_duplicates_removed": int(near_dupes_removed),
-        "source_group_leakage": 0,
-        "languages": clean_df["language"].value_counts().to_dict(),
+        "real_public_count": real_public_count,
+        "real_public_percentage": round(real_public_count / total_samples * 100, 2),
+        "manual_curated_count": manual_curated_count,
+        "manual_curated_percentage": round(manual_curated_count / total_samples * 100, 2),
+        "synthetic_count": synth_count,
+        "synthetic_percentage": round(synth_count / total_samples * 100, 2),
+        "total_non_synthetic_count": real_public_count + manual_curated_count,
+        "total_non_synthetic_percentage": round((real_public_count + manual_curated_count) / total_samples * 100, 2),
+        "english_count": int(lang_counts.get("en", 0)),
+        "hindi_count": int(lang_counts.get("hi", 0)),
+        "hinglish_count": int(lang_counts.get("hi-en", 0)),
+        "other_language_counts": other_lang_counts,
+        "languages": lang_counts,
+        "per_scam_type_count": clean_df["scam_type"].value_counts().to_dict(),
         "scam_types": clean_df["scam_type"].value_counts().to_dict(),
+        "unique_source_groups": int(clean_df["source_group"].nunique()),
+        "duplicate_count_removed": int(exact_dupes_removed),
+        "exact_duplicates_removed": int(exact_dupes_removed),
+        "near_duplicate_count_removed": int(near_dupes_removed),
+        "near_duplicates_removed": int(near_dupes_removed),
+        "final_feature_count": 6000,
+        "source_group_leakage": 0,
         "sources": clean_df["source"].value_counts().to_dict(),
         "test_set_details": {
             "size": int(len(test_df)),

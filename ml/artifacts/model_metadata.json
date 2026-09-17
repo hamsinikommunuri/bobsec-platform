@@ -2,7 +2,7 @@
   "model_version": "bobsec-mlp-v2-academic",
   "model_type": "Multilayer Perceptron (MLPClassifier)",
   "framework": "scikit-learn",
-  "training_timestamp": "2026-09-17T13:30:28Z",
+  "training_timestamp": "2026-09-17T17:29:49Z",
   "architecture": {
     "input_features": 6000,
     "hidden_layer_sizes": [
@@ -14,20 +14,20 @@
     "activation": "relu",
     "optimizer": "adam",
     "learning_rate_init": 0.001,
-    "alpha_l2_regularization": 0.0005,
+    "alpha_l2_regularization": 0.0001,
     "max_iter": 200,
     "early_stopping": true,
     "random_seed": 42
   },
   "training_results": {
     "iterations_executed": 19,
-    "final_loss": 0.002424509615395162,
-    "final_training_loss": 0.002424509615395162,
-    "best_validation_score": 1.0,
-    "training_samples": 1404,
-    "validation_samples": 199,
-    "held_out_test_samples": 511,
-    "decision_threshold": 0.5,
-    "training_duration_seconds": 174.496
+    "final_loss": 0.0007186567297939892,
+    "final_training_loss": 0.0007186567297939892,
+    "best_validation_score": 0.9922480620155039,
+    "training_samples": 1289,
+    "validation_samples": 240,
+    "held_out_test_samples": 585,
+    "decision_threshold": 0.39,
+    "training_duration_seconds": 4386.116
   }
 }

@@ -1,13 +1,18 @@
 original_id,error_type,true_label,predicted_label,scam_probability,scam_type,language,source_group,source,is_synthetic,text_snippet
-IND_HI_0045,False Positive,benign,scam,0.6283,benign,hi,hi_grp_012,curated_multilingual_indian_corpus,False,"घर का राशन मंगाना है, क्या तुम रास्ते से 2 किलो चीनी और चायपत्ती ले आओगे?"
-IND_HI_0047,False Positive,benign,scam,0.6245,benign,hi,hi_grp_012,curated_multilingual_indian_corpus,False,सब्जी मंडी से ताज़ा सब्जियाँ और फल लेते आना भाई।
-IND_KN_0182,False Positive,benign,scam,0.5659,benign,kn,kn_grp_001,curated_multilingual_indian_corpus,False,"ನಮಸ್ಕಾರ, ಪ್ರಾಜೆಕ್ಟ್ ಸಭೆ ನಾಳೆ ಬೆಳಿಗ್ಗೆ 10:00 ಗಂಟೆಗೆ ಸಭಾಂಗಣದಲ್ಲಿ ನಡೆಯಲಿದೆ."
-IND_KN_0184,False Positive,benign,scam,0.951,benign,kn,kn_grp_001,curated_multilingual_indian_corpus,False,ಸಭೆಯ ವಿವರಗಳು ಮತ್ತು ಪ್ರಸ್ತುತಿ ಕಡತಗಳನ್ನು ಇಮೇಲ್ ಮಾಡಲಾಗಿದೆ.
-IND_KN_0186,False Positive,benign,scam,0.9451,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಅಮ್ಮಾ, ನಾನು ಕಚೇರಿಯಿಂದ ಹೊರಟಿದ್ದೇನೆ, ರಾತ್ರಿ 8 ಗಂಟೆಗೆ ಮನೆಗೆ ಬರುತ್ತೇನೆ."
-IND_KN_0188,False Positive,benign,scam,0.9564,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಕೆಲಸ ಮುಗಿದಿದೆ ಅಮ್ಮಾ, ಊಟ ರೆಡಿ ಮಾಡಿಡು, ಈಗಲೇ ಹೊರಡುತ್ತಿದ್ದೇನೆ."
-IND_KN_0189,False Positive,benign,scam,0.9407,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಅಮ್ಮಾ, ಬಸ್ ಹತ್ತಿದ್ದೇನೆ, ಇನ್ನೊಂದು ಅರ್ಧ ಗಂಟೆಯಲ್ಲಿ ಮನೆಗೆ ತಲುಪುತ್ತೇನೆ."
-IND_KN_0190,False Positive,benign,scam,0.9651,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಚಿಂತೆ ಮಾಡಬೇಡ ಅಮ್ಮಾ, ಇನ್ನೇನು ಸ್ವಲ್ಪ ಹೊತ್ತಿನಲ್ಲಿ ಮನೆಗೆ ಬಂದುಬಿಡುತ್ತೇನೆ."
-IND_KN_0192,False Positive,benign,scam,0.9286,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,"ಬೆಸ್ಕಾಂ: ಆಗಸ್ಟ್ ತಿಂಗಳ ವಿದ್ಯುತ್ ಬಿಲ್ ರೂ. 1,280 ಯಶಸ್ವಿಯಾಗಿ ಜಮೆಯಾಗಿದೆ."
-IND_KN_0193,False Positive,benign,scam,0.9707,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ವಿದ್ಯುತ್ ಬಿಲ್ ಪಾವತಿಸಿದ್ದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ರಶೀದಿ ಇಮೇಲ್ ಮಾಡಲಾಗಿದೆ.
-IND_KN_0194,False Positive,benign,scam,0.9675,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ಭಾರತ್ ಬಿಲ್‌ಪೇ ಮೂಲಕ ವಿದ್ಯುತ್ ಬಿಲ್ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ.
-IND_KN_0195,False Positive,benign,scam,0.9607,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ನಿಮ್ಮ ಬಿಲ್ ಪಾವತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ. ಮುಂದಿನ ಗಡುವು ದಿನಾಂಕ ಅಕ್ಟೋಬರ್ 15.
+UCI_0186,False Positive,benign,scam,0.7402,benign,en,uci_grp_live_concert,uci_sms_corpus,False,Don't forget to download the digital concert passes on your smartphone.
+UCI_0277,False Positive,benign,scam,0.4492,benign,en,uci_grp_astronomy_night,uci_sms_corpus,False,Downloading a star map mobile application to identify passing satellites.
+IND_HI_0017,False Positive,benign,scam,0.9419,benign,hi,hi_grp_005,curated_multilingual_indian_corpus,False,"प्रिय ग्राहक, आपके एसबीआई बैंक खाते में वेतन के 52,000 रुपये जमा हो गए हैं।"
+IND_HI_0019,False Positive,benign,scam,0.5736,benign,hi,hi_grp_005,curated_multilingual_indian_corpus,False,"बैंक खाता अलर्ट: आपके खाते में 52,000 रुपये की वेतन राशि जमा कर दी गई है।"
+IND_HIEN_0127,False Positive,benign,scam,0.9278,benign,hi-en,hien_grp_014,curated_multilingual_indian_corpus,False,"Airtel broadband customer care ko complaint register kar di hai, ticket no 948201."
+IND_TA_0146,False Positive,benign,scam,0.4301,benign,ta,ta_grp_004,curated_multilingual_indian_corpus,False,நாளை மாலை நண்பர்களுடன் கிரிக்கெட் விளையாட மைதானத்திற்கு வருகிறீர்களா?
+IND_TA_0149,False Positive,benign,scam,0.6541,benign,ta,ta_grp_004,curated_multilingual_indian_corpus,False,"நாளை மாலை மைதானத்தில் அனைவரும் சந்திப்போம், கிரிக்கெட் பயிற்சி உள்ளது."
+IND_TE_0168,False Positive,benign,scam,0.4076,benign,te,te_grp_003,curated_multilingual_indian_corpus,False,విద్యుత్ బిల్లు రసీదు మీ మొబైల్ నంబరుకు పంపించబడింది.
+IND_TE_0169,False Positive,benign,scam,0.5104,benign,te,te_grp_003,curated_multilingual_indian_corpus,False,భారత్ బిల్ పే ద్వారా విద్యుత్ బిల్లు చెల్లింపు విజయవంతమైంది.
+IND_ML_0206,False Positive,benign,scam,0.7919,benign,ml,ml_grp_003,curated_multilingual_indian_corpus,False,നിങ്ങളുടെ വൈദ്യുതി ബിൽ വിജയകരമായി അടച്ചു. രസീത് നമ്പർ: 482910.
+IND_ML_0208,False Positive,benign,scam,0.4463,benign,ml,ml_grp_003,curated_multilingual_indian_corpus,False,വൈദ്യുതി ബിൽ അടച്ചതിനുള്ള രസീത് നിങ്ങളുടെ ഫോണിൽ അയച്ചിട്ടുണ്ട്.
+IND_ML_0209,False Positive,benign,scam,0.8392,benign,ml,ml_grp_003,curated_multilingual_indian_corpus,False,ഭാരത് ബിൽപേ വഴി നിങ്ങളുടെ വൈദ്യുതി ബിൽ അടയ്ക്കൽ പൂർത്തിയായി.
+TEL_OTH_0514,False Negative,scam,benign,0.3771,other_scam,en,tel_other_loan_extortion,cert_in_and_i4c_telemetry,False,Loan Recovery Cell: Last warning to pay loan dues of Rs 7500. Our recovery agents have reached your locality. Clear payment now or face severe public 
+TEL_OTH_0529,False Negative,scam,benign,0.3183,other_scam,en,tel_other_loan_extortion,cert_in_and_i4c_telemetry,False,Loan Recovery Cell: Last warning to pay loan dues of Rs 18000. Our recovery agents have reached your locality. Clear payment now or face severe public
+SYN_REG_0056,False Negative,scam,benign,0.3406,digital_arrest,kn,synth_kn_da,synthetic_adversarial_augmentation,True,ಸಿಬಿಐ ಸೈಬರ್ ಕ್ರೈಮ್ ವಿಭಾಗ: ನಿಮ್ಮ ಆಧಾರ್ ಸಂಖ್ಯೆಯಲ್ಲಿ ಅಕ್ರಮ ಹಣ ವರ್ಗಾವಣೆ ಪ್ರಕರಣದಲ್ಲಿ ಬಂಧನ ವಾರಂಟ್ ಹೊರಡಿಸಲಾಗಿದೆ. ನೀವು ಡಿಜಿಟಲ್ ಅರೆಸ್ಟ್‌ನಲ್ಲಿದ್ದೀರಿ. ತಕ್ಷಣ ಸ್ಕೈ
+SYN_REG_0057,False Negative,scam,benign,0.1556,digital_arrest,kn,synth_kn_da,synthetic_adversarial_augmentation,True,ಮುಂಬೈ ಪೊಲೀಸ್: ನಿಮ್ಮ ಹೆಸರಿನ ಪಾರ್ಸೆಲ್‌ನಲ್ಲಿ ಮಾದಕ ದ್ರವ್ಯ ಪತ್ತೆಯಾಗಿದೆ. ತಕ್ಷಣ ಆನ್‌ಲೈನ್ ವಿಚಾರಣೆಗೆ ಹಾಜರಾಗಿ.
+SYN_REG_0058,False Negative,scam,benign,0.226,digital_arrest,kn,synth_kn_da,synthetic_adversarial_augmentation,True,ಟೆಲಿಕಾಂ ಇಲಾಖೆ: ನಿಮ್ಮ ಎಲ್ಲಾ 9 ಸಿಮ್ ಕಾರ್ಡ್‌ಗಳನ್ನು 2 ಗಂಟೆಗಳಲ್ಲಿ ರದ್ದುಗೊಳಿಸಲಾಗುವುದು. ವಿಚಾರಣಾಧಿಕಾರಿಯನ್ನು ಸಂಪರ್ಕಿಸಿ.

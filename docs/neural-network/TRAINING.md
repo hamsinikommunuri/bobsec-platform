@@ -35,27 +35,27 @@ graph TD
     end
     
     Concat --> BaselineLR["Baseline: LogisticRegression (L2, C=1.0)"]
-    Concat --> CustomMLP["BobSec MLP: [256, 128, 64] (ReLU, Adam, Alpha=0.0005)"]
+    Concat --> CustomMLP["BobSec MLP: [256, 128, 64] (ReLU, Adam, Alpha=0.0001)"]
     
-    BaselineLR --> OutputLR["Baseline Result: 97.65% Acc / 0.9788 F1"]
-    CustomMLP --> OutputMLP["MLP Result: 97.65% Acc / 0.9788 F1 / 1.0000 Recall"]
+    BaselineLR --> OutputLR["Baseline Result: 98.29% Acc / 0.9861 F1"]
+    CustomMLP --> OutputMLP["MLP Result: 97.09% Acc / 0.9764 F1 / 0.9860 Recall"]
 ```
 
 ---
 
 ## 2. Validation-Based Hyperparameter Tuning
 
-Hyperparameter optimization was performed strictly on the isolated **Validation Split** (199 samples across 16 unseen groups) to prevent evaluation data leakage:
+Hyperparameter optimization was performed strictly on the isolated **Validation Split** (240 samples across 23 unseen groups) to prevent evaluation data leakage:
 
 - **Grid Search**: Regularization parameter $\alpha \in [0.0001, 0.0005, 0.001, 0.01]$.
-- **Selection Criterion**: Maximum Validation F1-score with zero false negatives.
-- **Selected Hyperparameter**: $\alpha = 0.0005$ achieved Validation $\text{F1} = 1.0000$ and Validation $\text{Recall} = 1.0000$.
+- **Selection Criterion**: Maximum Validation F1-score with optimal precision-recall balance.
+- **Selected Hyperparameter**: $\alpha = 0.0001$ achieved Validation $\text{Score} = 0.9922$ with balanced convergence stability.
 
 ---
 
 ## 3. Training Execution & Convergence Dynamics
 
-The primary network was trained on the training partition ($N_{\text{train}} = 1,404$ samples) using full-batch Adam optimization:
+The primary network was trained on the training partition ($N_{\text{train}} = 1,289$ samples) using full-batch Adam optimization:
 
 | Hyperparameter | Configured Value | Academic Rationale |
 | :--- | :--- | :--- |
@@ -64,30 +64,31 @@ The primary network was trained on the training partition ($N_{\text{train}} = 1
 | **Activation Function** | `relu` | Non-saturating gradient propagation |
 | **Optimization Algorithm** | `adam` | Adaptive moment estimation |
 | **Initial Learning Rate ($\eta$)**| `0.001` | Balanced convergence stability |
-| **L2 Regularization ($\alpha$)** | `0.0005` | Prevents overfitting to high-frequency training n-grams |
+| **L2 Regularization ($\alpha$)** | `0.0001` | Prevents overfitting to high-frequency training n-grams |
 | **Early Stopping** | `True` | Monitored with validation fraction = 10% |
 | **Max Iterations** | `200` | Upper bound for convergence |
 | **Iterations Executed** | **19** | Converged smoothly at plateau |
-| **Final Training Loss** | **0.002425** | Highly optimized cross-entropy convergence |
-| **Decision Threshold** | **0.50** | Calibrated on validation partition |
+| **Final Training Loss** | **0.000719** | Highly optimized cross-entropy convergence |
+| **Decision Threshold** | **0.39** | Calibrated on validation partition |
 
 ---
 
 ## 4. Comparison with Baseline Classifier
 
-Both the Custom MLP and the Baseline Logistic Regression were trained on the identical training partition and evaluated on the identical 511-sample held-out test split:
+Both the Custom MLP and the Baseline Logistic Regression were trained on the identical training partition and evaluated on the identical 585-sample held-out test split:
 
 | Metric | Baseline: Logistic Regression (L2, C=1.0) | BobSec Custom MLP (256, 128, 64) |
 | :--- | :--- | :--- |
-| **Test Accuracy** | 97.65% | **97.65%** |
-| **Scam Precision** | 0.9585 | **0.9585** |
-| **Scam Recall** | 1.0000 | **1.0000** |
-| **Scam F1-Score** | 0.9788 | **0.9788** |
-| **Macro F1-Score** | 0.9762 | **0.9762** |
-| **ROC-AUC** | 0.9997 | **0.9976** |
-| **PR-AUC** | 0.9997 | **0.9979** |
-| **False Positives** | 12 | **12** |
-| **False Negatives** | 0 | **0** |
+| **Test Accuracy** | **98.29%** | **97.09%** |
+| **Scam Precision** | **0.9806** | **0.9670** |
+| **Scam Recall** | **0.9916** | **0.9860** |
+| **Scam F1-Score** | **0.9861** | **0.9764** |
+| **Macro F1-Score** | **0.9821** | **0.9693** |
+| **Weighted F1-Score** | **0.9830** | **0.9709** |
+| **ROC-AUC** | **0.9979** | **0.9960** |
+| **PR-AUC** | **0.9987** | **0.9974** |
+| **False Positives** | **7** | **12** |
+| **False Negatives** | **3** | **5** |
 
 ---
 

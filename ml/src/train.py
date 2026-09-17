@@ -81,23 +81,34 @@ def export_weights_json(mlp: MLPClassifier, metadata: Dict[str, Any], filepath: 
 
 def plot_training_curves(mlp: MLPClassifier, reports_dir: Path) -> None:
     """Plots training loss and validation convergence curves."""
+    # 1. Training Cross-Entropy Loss Curve
     plt.figure(figsize=(7.5, 4.8), dpi=300)
     epochs = range(1, len(mlp.loss_curve_) + 1)
     plt.plot(epochs, mlp.loss_curve_, marker="o", markersize=3, color="#10b981", label="Training Cross-Entropy Loss")
-    
-    if hasattr(mlp, "validation_scores_") and mlp.validation_scores_ is not None and len(mlp.validation_scores_) > 0:
-        val_epochs = range(1, len(mlp.validation_scores_) + 1)
-        plt.plot(val_epochs, mlp.validation_scores_, marker="s", markersize=3, color="#3b82f6", label="Internal Validation Accuracy")
-        
-    plt.title("BobSec Custom MLP Neural Network Convergence Curve", fontsize=12, fontweight="bold")
+    plt.title("BobSec Custom MLP Neural Network Training Loss Curve", fontsize=12, fontweight="bold")
     plt.xlabel("Training Iteration (Epoch)", fontsize=10)
-    plt.ylabel("Loss / Validation Score", fontsize=10)
+    plt.ylabel("Loss (Cross-Entropy)", fontsize=10)
     plt.grid(True, linestyle="--", alpha=0.5)
-    plt.legend(loc="best")
+    plt.legend(loc="upper right")
     plt.tight_layout()
     plt.savefig(reports_dir / "training_loss_curve.png")
     plt.close()
     print("Saved training loss curve to reports.")
+    
+    # 2. Validation Score Curve (if supported by early stopping)
+    if hasattr(mlp, "validation_scores_") and mlp.validation_scores_ is not None and len(mlp.validation_scores_) > 0:
+        plt.figure(figsize=(7.5, 4.8), dpi=300)
+        val_epochs = range(1, len(mlp.validation_scores_) + 1)
+        plt.plot(val_epochs, mlp.validation_scores_, marker="s", markersize=3, color="#3b82f6", label="Internal Validation Accuracy")
+        plt.title("BobSec Custom MLP Neural Network Validation Score Curve", fontsize=12, fontweight="bold")
+        plt.xlabel("Training Iteration (Epoch)", fontsize=10)
+        plt.ylabel("Validation Score (Accuracy)", fontsize=10)
+        plt.grid(True, linestyle="--", alpha=0.5)
+        plt.legend(loc="lower right")
+        plt.tight_layout()
+        plt.savefig(reports_dir / "validation_score_curve.png")
+        plt.close()
+        print("Saved validation score curve to reports.")
 
 def tune_hyperparameters_on_validation(
     X_train, y_train, X_val, y_val, config: TrainingConfig

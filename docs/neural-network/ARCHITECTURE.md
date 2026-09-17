@@ -83,7 +83,7 @@ where $k = 0$ corresponds to **Benign** communications and $k = 1$ corresponds t
 
 ### 3.2 Loss Function: Regularized Binary Cross-Entropy
 
-The objective function minimizes Cross-Entropy loss over $N_{\text{train}} = 1,404$ training samples with $L_2$ weight regularization ($\alpha = 0.0005$):
+The objective function minimizes Cross-Entropy loss over $N_{\text{train}} = 1,289$ training samples with $L_2$ weight regularization ($\alpha = 0.0001$):
 
 $$\mathcal{J}(W, b) = -\frac{1}{N} \sum_{i=1}^{N} \left[ y^{(i)} \log \hat{y}^{(i)} + (1 - y^{(i)}) \log (1 - \hat{y}^{(i)}) \right] + \frac{\alpha}{2N} \sum_{l=1}^{L} \|W^{[l]}\|_F^2$$
 

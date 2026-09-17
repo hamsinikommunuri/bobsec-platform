@@ -86,9 +86,9 @@ flowchart TD
     Clean --> Unique["Deduplicated Corpus (2,114 Samples, 176 Groups)"]
     Unique --> SplitEngine["GroupShuffleSplit Engine (Test=25%, Val=12%, Seed=42)"]
     
-    SplitEngine --> TrainSet["Training Split (66.41%)<br/>1,404 Samples · 116 Source Groups<br/>792 Scam · 612 Benign"]
-    SplitEngine --> ValSet["Validation Split (9.41%)<br/>199 Samples · 16 Source Groups<br/>144 Scam · 55 Benign"]
-    SplitEngine --> TestSet["Held-Out Test Split (24.17%)<br/>511 Samples · 44 Source Groups<br/>277 Scam · 234 Benign"]
+    SplitEngine --> TrainSet["Training Split (60.97%)<br/>1,289 Samples · 108 Source Groups<br/>701 Scam · 588 Benign"]
+    SplitEngine --> ValSet["Validation Split (11.35%)<br/>240 Samples · 23 Source Groups<br/>155 Scam · 85 Benign"]
+    SplitEngine --> TestSet["Held-Out Test Split (27.67%)<br/>585 Samples · 45 Source Groups<br/>357 Scam · 228 Benign"]
     
     LeakCheck{"Mathematical Overlap Verification:<br/>Train ∩ Val ∩ Test Groups"}
     TrainSet --> LeakCheck
@@ -101,7 +101,7 @@ flowchart TD
 
 | Split | Total Samples | Source Groups | Scam Count | Benign Count | Real/Public | Synthetic |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Train** | 1,404 (66.41%) | 116 | 792 (56.41%) | 612 (43.59%) | 1,351 | 53 |
-| **Validation** | 199 (9.41%) | 16 | 144 (72.36%) | 55 (27.64%) | 187 | 12 |
-| **Held-Out Test** | **511** (24.17%) | **44** | **277** (54.21%) | **234** (45.79%) | **504** | **7** |
+| **Train** | 1,289 (60.97%) | 108 | 701 (54.38%) | 588 (45.62%) | 1,242 | 47 |
+| **Validation** | 240 (11.35%) | 23 | 155 (64.58%) | 85 (35.42%) | 234 | 6 |
+| **Held-Out Test** | **585** (27.67%) | **45** | **357** (61.03%) | **228** (38.97%) | **566** | **19** |
 | **Total** | **2,114** (100.0%) | **176** | **1,213** (57.38%) | **901** (42.62%) | **2,042** (96.59%) | **72** (3.41%) |

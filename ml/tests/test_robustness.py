@@ -54,3 +54,29 @@ def test_adversarial_zero_length_and_whitespace():
     assert predict_scam("")["predicted_label"] == "benign"
     assert predict_scam("          \n\t   ")["predicted_label"] == "benign"
     assert predict_scam(None)["predicted_label"] == "benign"
+
+@pytest.mark.parametrize("kyc_variant", ["KYC", "K.Y.C", "K-Y-C", "kyc", "KYC!!!"])
+def test_kyc_and_punctuation_variants(kyc_variant):
+    text = f"Dear SBI user, your {kyc_variant} has expired. Update immediately to prevent account lock: http://sbi-verify.cc"
+    res = predict_scam(text)
+    assert res["predicted_label"] == "scam"
+    assert res["scam_probability"] > 0.60
+
+@pytest.mark.parametrize("upi_variant", ["UPI", "U.P.I", "u.p.i"])
+def test_upi_spelling_variants(upi_variant):
+    text = f"Send Rs 500 via {upi_variant} to claim your reward of Rs 25,000 immediately."
+    res = predict_scam(text)
+    assert res["predicted_label"] == "scam"
+    assert res["scam_probability"] > 0.60
+
+def test_mixed_case_and_leetspeak():
+    text = "DEAR user, vEr1fP your bAnk acct immediately: http://ver1fy-now.cc/bank"
+    res = predict_scam(text)
+    assert res["predicted_label"] == "scam"
+    assert res["scam_probability"] > 0.60
+
+def test_shortened_scam_phrases():
+    short_scam = "Electricity power cut tonight 9:30pm. Call officer 9876543210 immediately."
+    res = predict_scam(short_scam)
+    assert res["predicted_label"] == "scam"
+    assert res["scam_probability"] > 0.60

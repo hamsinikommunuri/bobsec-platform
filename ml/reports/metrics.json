@@ -1,120 +1,158 @@
 {
   "evaluation_dataset": "BobSec Held-Out Test Split (Group-Aware Independent)",
-  "test_samples": 511,
-  "unique_test_source_groups": 44,
-  "decision_threshold": 0.5,
+  "test_samples": 585,
+  "unique_test_source_groups": 45,
+  "decision_threshold": 0.39,
   "primary_model": {
     "name": "BobSec Custom MLPClassifier",
     "architecture": "(256, 128, 64) with ReLU and Adam",
-    "accuracy": 0.9765,
-    "precision": 0.9585,
-    "recall": 1.0,
-    "f1_score": 0.9788,
-    "macro_precision": 0.9792,
-    "macro_recall": 0.9744,
-    "macro_f1": 0.9762,
-    "weighted_f1": 0.9765,
-    "specificity": 0.9487,
-    "false_positive_rate": 0.0513,
-    "false_negative_rate": 0.0,
-    "roc_auc": 0.9976,
-    "pr_auc": 0.9979,
+    "accuracy": 0.9709,
+    "precision": 0.967,
+    "recall": 0.986,
+    "f1_score": 0.9764,
+    "macro_precision": 0.9722,
+    "macro_recall": 0.9667,
+    "macro_f1": 0.9693,
+    "weighted_f1": 0.9709,
+    "specificity": 0.9474,
+    "false_positive_rate": 0.0526,
+    "false_negative_rate": 0.014,
+    "roc_auc": 0.996,
+    "pr_auc": 0.9974,
     "confusion_matrix": {
-      "true_negatives": 222,
+      "true_negatives": 216,
       "false_positives": 12,
-      "false_negatives": 0,
-      "true_positives": 277
+      "false_negatives": 5,
+      "true_positives": 352
     },
     "confidence_intervals_95": {
       "accuracy": {
-        "mean": 0.9762,
-        "ci_lower": 0.9628,
-        "ci_upper": 0.9883
+        "mean": 0.9711,
+        "ci_lower": 0.9572,
+        "ci_upper": 0.9829
       },
       "precision": {
-        "mean": 0.9579,
-        "ci_lower": 0.9336,
-        "ci_upper": 0.9794
+        "mean": 0.9672,
+        "ci_lower": 0.9478,
+        "ci_upper": 0.9837
       },
       "recall": {
-        "mean": 1.0,
-        "ci_lower": 1.0,
-        "ci_upper": 1.0
+        "mean": 0.986,
+        "ci_lower": 0.974,
+        "ci_upper": 0.9972
       },
       "f1_score": {
-        "mean": 0.9785,
-        "ci_lower": 0.9656,
-        "ci_upper": 0.9896
+        "mean": 0.9765,
+        "ci_lower": 0.964,
+        "ci_upper": 0.9865
       }
     }
   },
   "baseline_comparison": {
     "name": "Baseline Logistic Regression",
-    "accuracy": 0.9765,
-    "precision": 0.9585,
-    "recall": 1.0,
-    "f1_score": 0.9788,
-    "roc_auc": 0.9997,
-    "pr_auc": 0.9997,
+    "accuracy": 0.9829,
+    "precision": 0.9806,
+    "recall": 0.9916,
+    "f1_score": 0.9861,
+    "roc_auc": 0.9979,
+    "pr_auc": 0.9987,
     "confusion_matrix": {
-      "true_negatives": 222,
-      "false_positives": 12,
-      "false_negatives": 0,
-      "true_positives": 277
+      "true_negatives": 221,
+      "false_positives": 7,
+      "false_negatives": 3,
+      "true_positives": 354
     }
   },
   "per_scam_type_performance": {
     "bank_kyc": {
-      "sample_count": 3,
-      "detected_count": 3,
-      "detection_recall": 1.0
-    },
-    "benign": {
-      "sample_count": 234,
-      "correctly_classified": 222,
-      "specificity": 0.9487
-    },
-    "digital_arrest": {
-      "sample_count": 12,
-      "detected_count": 12,
-      "detection_recall": 1.0
-    },
-    "fake_customer_care": {
       "sample_count": 48,
       "detected_count": 48,
-      "detection_recall": 1.0
+      "missed_count": 0,
+      "detection_recall": 1.0,
+      "recall": 1.0,
+      "precision": 0.8,
+      "f1_score": 0.8889
+    },
+    "benign": {
+      "sample_count": 228,
+      "correctly_classified": 216,
+      "specificity": 0.9474,
+      "precision": 0.9774,
+      "recall": 0.9474,
+      "f1_score": 0.9621
+    },
+    "courier_scam": {
+      "sample_count": 40,
+      "detected_count": 40,
+      "missed_count": 0,
+      "detection_recall": 1.0,
+      "recall": 1.0,
+      "precision": 0.7692,
+      "f1_score": 0.8696
+    },
+    "digital_arrest": {
+      "sample_count": 40,
+      "detected_count": 37,
+      "missed_count": 3,
+      "detection_recall": 0.925,
+      "recall": 0.925,
+      "precision": 0.7551,
+      "f1_score": 0.8315
     },
     "job_scam": {
-      "sample_count": 36,
-      "detected_count": 36,
-      "detection_recall": 1.0
-    },
-    "lottery_reward": {
-      "sample_count": 32,
-      "detected_count": 32,
-      "detection_recall": 1.0
+      "sample_count": 108,
+      "detected_count": 108,
+      "missed_count": 0,
+      "detection_recall": 1.0,
+      "recall": 1.0,
+      "precision": 0.9,
+      "f1_score": 0.9474
     },
     "other_scam": {
-      "sample_count": 30,
-      "detected_count": 30,
-      "detection_recall": 1.0
+      "sample_count": 25,
+      "detected_count": 23,
+      "missed_count": 2,
+      "detection_recall": 0.92,
+      "recall": 0.92,
+      "precision": 0.6571,
+      "f1_score": 0.7667
     },
     "phishing": {
       "sample_count": 73,
       "detected_count": 73,
-      "detection_recall": 1.0
+      "missed_count": 0,
+      "detection_recall": 1.0,
+      "recall": 1.0,
+      "precision": 0.8588,
+      "f1_score": 0.9241
     },
     "upi_fraud": {
-      "sample_count": 43,
-      "detected_count": 43,
-      "detection_recall": 1.0
+      "sample_count": 23,
+      "detected_count": 23,
+      "missed_count": 0,
+      "detection_recall": 1.0,
+      "recall": 1.0,
+      "precision": 0.6571,
+      "f1_score": 0.7931
     }
   },
   "error_analysis_summary": {
-    "total_misclassifications": 12,
+    "total_misclassifications": 17,
     "false_positive_count": 12,
-    "false_negative_count": 0,
-    "fp_causes_summary": "Legitimate banking alerts or OTP notifications containing financial figures and urgent timestamps occasionally trigger benign alarms.",
-    "fn_causes_summary": "Subtle conversational job offerings or obfuscated adversarial text with low keyword density occasionally fall below the decision threshold."
+    "false_negative_count": 5,
+    "fp_breakdown_by_language": {
+      "ml": 3,
+      "en": 2,
+      "hi": 2,
+      "ta": 2,
+      "te": 2,
+      "hi-en": 1
+    },
+    "fn_breakdown_by_scam_type": {
+      "digital_arrest": 3,
+      "other_scam": 2
+    },
+    "fp_causes_summary": "False Positives (12 total) occur in languages {'ml': 3, 'en': 2, 'hi': 2, 'ta': 2, 'te': 2, 'hi-en': 1}, driven by formal banking transaction notices or urgent timestamps that mimic cyber alerts.",
+    "fn_causes_summary": "False Negatives (5 total) are concentrated in categories {'digital_arrest': 3, 'other_scam': 2}, where conversational job offers or informal advance-fee solicitations lack explicit technical indicators."
   }
 }

@@ -22,7 +22,7 @@ def test_mlp_architecture_integrity():
     assert len(mlp.coefs_) == 4, f"Expected 4 weight matrices (3 hidden layers + output), got {len(mlp.coefs_)}"
     assert mlp.coefs_[0].shape[1] == 256, "First hidden layer must have 256 neurons"
     assert mlp.coefs_[1].shape[1] == 128, "Second hidden layer must have 128 neurons"
-    # In scikit-learn binary classification, output layer uses 1 unit with logistic activation
+    assert mlp.coefs_[2].shape[1] == 64, "Third hidden layer must have 64 neurons"
     assert mlp.coefs_[3].shape[1] in [1, 2], "Output layer must have 1 (binary logistic) or 2 (softmax) units"
 
 def test_metadata_schema():
@@ -33,3 +33,19 @@ def test_metadata_schema():
     assert meta["architecture"]["optimizer"] == "adam"
     loss = meta["training_results"].get("final_loss", meta["training_results"].get("final_training_loss"))
     assert loss is not None and loss < 0.10
+
+def test_model_probabilities_bounded():
+    mlp = joblib.load(MODEL_PATH)
+    pipeline = joblib.load(PIPELINE_PATH)
+    sample_texts = [
+        "Your bank KYC has expired. Update immediately at http://fake-sbi.cc",
+        "Hey, can you pick up milk on the way home?",
+        "URGENT: CBI officer digital arrest warrant issued. Transfer Rs 50,000 to verify.",
+        "Your Swiggy order of Rs 420 has been delivered.",
+        "FREE LOTTERY PRIZE of Rs 25,00,000 won! Call 9876543210 now."
+    ]
+    features = pipeline.transform(sample_texts)
+    probs = mlp.predict_proba(features)
+    assert probs.shape == (len(sample_texts), 2)
+    assert (probs >= 0.0).all() and (probs <= 1.0).all(), "Model probabilities fall outside [0, 1] range"
+    assert (probs.sum(axis=1) >= 0.999).all() and (probs.sum(axis=1) <= 1.001).all(), "Probabilities do not sum to 1.0"

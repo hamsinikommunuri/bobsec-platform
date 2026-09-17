@@ -105,18 +105,34 @@ Detailed architectural flow & Mermaid diagrams: see [`docs/ARCHITECTURE.md`](doc
 
 BobSec includes a custom feedforward **3-layer Multilayer Perceptron (MLP)** neural network trained on an expanded, multi-source Indian fraud corpus to provide high-speed statistical prior probabilities to the multi-agent risk engine.
 
+### CUSTOM NEURAL NETWORK
+
+- **Language**: Python
+- **Model**: MLPClassifier
+- **Features**: Word + Character TF-IDF (6,000 dimensions: 3,000 word n-grams [1,2] + 3,000 char n-grams [3,5])
+- **Architecture**: (256, 128, 64) ReLU hidden layers with Softmax output
+- **Optimizer**: Adam (learning rate = 0.001, alpha = 0.0001, early stopping)
+- **Dataset size**: 2,114
+- **Train samples**: 1,289 (60.97%)
+- **Validation samples**: 240 (11.35%)
+- **Test samples**: 585 (27.67%)
+- **Accuracy**: 97.09% (0.9709) [95% CI: 95.72% – 98.29%]
+- **Precision**: 96.70% (0.9670) [95% CI: 94.78% – 98.37%]
+- **Recall**: 98.60% (0.9860) [95% CI: 97.40% – 99.72%]
+- **F1**: 97.64% (0.9764) [95% CI: 96.40% – 98.65%]
+- **ROC-AUC**: 0.9960
+- **PR-AUC**: 0.9974
+
 ### Key ML Highlights:
-- **Expanded Multi-Source Corpus ($N = 2,114$)**: Curated from CERT-In citizen telemetry, I4C cyber threat intelligence, UCI SMS mobile corpus, authentic Indian banking/telecom alerts, and adversarial augmentations (96.59% real/public provenance).
+- **Expanded Multi-Source Corpus ($N = 2,114$)**: Curated from CERT-In citizen telemetry, I4C cyber threat intelligence, UCI SMS mobile corpus, authentic Indian banking/telecom alerts, and adversarial augmentations (96.59% real/public provenance: 887 real/public, 1,155 curated, 72 synthetic).
 - **11 Threat Categories & 7 Languages**: Covers Bank KYC, Digital Arrest, UPI Fraud, Phishing, Fake Customer Care, Job Scams, Courier Scams, Investment Schemes, Lottery Rewards, Other Fraud, and Benign Controls across English, Hinglish, Hindi, Tamil, Telugu, Kannada, and Malayalam.
 - **Zero Leakage Group-Aware Partitioning**: Enforces strict `GroupShuffleSplit` across 176 threat template groups ($G_{\text{train}} \cap G_{\text{val}} \cap G_{\text{test}} = \emptyset$).
-- **Architecture**: 6,000-dimensional Word $(1, 2)$ and Character $(3, 5)$ TF-IDF FeatureUnion fed into a (256, 128, 64) ReLU hidden hierarchy with Adam optimization and validation-tuned $L_2$ regularization ($\alpha = 0.0005$).
-- **Rigorous Independent Evaluation ($N_{\text{test}} = 511$ across 44 unseen groups)**:
-  - **Accuracy**: **97.65%** (95% Bootstrap CI: [96.28%, 98.83%])
-  - **Scam Recall**: **100.00%** (Zero missed scams on test partition)
-  - **Scam Precision**: **0.9585** (95% CI: [0.9336, 0.9794])
-  - **F1-Score**: **0.9788** | **ROC-AUC**: **0.9976** | **PR-AUC**: **0.9979**
-- **Dual-Runtime Serverless Deployment**: Exports compact NumPy weights (`mlp_model.npz` ~2.8MB) and index mappings (`vocab.json` ~100KB) enabling zero-dependency inference on Vercel serverless functions in $<10\text{ms}$ well below the 250MB ceiling.
-- **Full Documentation**:
+- **Held-Out Independent Evaluation ($N_{\text{test}} = 585$ across 45 unseen groups)**:
+  - **Confusion Matrix**: True Negatives = 216, False Positives = 12, False Negatives = 5, True Positives = 352
+  - **Macro F1**: 0.9693 | **Weighted F1**: 0.9709 | **Specificity**: 94.74%
+  - **Baseline Logistic Regression**: 98.29% Accuracy, 0.9861 F1, 0.9979 ROC-AUC (TN=221, FP=7, FN=3, TP=354)
+- **Dual-Runtime Serverless Deployment**: Exports compact NumPy weights (`mlp_model.npz` ~5.8MB) and index mappings (`vocab.json` ~93KB) enabling zero-dependency inference on Vercel serverless functions in $<15\text{ms}$ well below the 250MB ceiling.
+- **Full Academic Documentation**:
   - Dataset Specification: [`docs/neural-network/DATASET.md`](docs/neural-network/DATASET.md)
   - Training Procedure: [`docs/neural-network/TRAINING.md`](docs/neural-network/TRAINING.md)
   - Rigorous Evaluation: [`docs/neural-network/EVALUATION.md`](docs/neural-network/EVALUATION.md)

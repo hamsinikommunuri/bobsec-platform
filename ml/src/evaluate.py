@@ -1,4 +1,4 @@
-﻿"""Comprehensive Academic Evaluation Pipeline for BobSec Neural Network Subsystem.
+"""Comprehensive Academic Evaluation Pipeline for BobSec Neural Network Subsystem.
 
 Computes exhaustive performance benchmarks on the held-out independent test set:
 - Primary MLP vs Baseline Logistic Regression comparison
@@ -60,10 +60,20 @@ def compute_bootstrap_ci(
         y_t = y_true[idx]
         y_p = y_pred[idx]
         
-        boot_acc.append(accuracy_score(y_t, y_p))
-        boot_prec.append(precision_score(y_t, y_p, zero_division=0))
-        boot_rec.append(recall_score(y_t, y_p, zero_division=0))
-        boot_f1.append(f1_score(y_t, y_p, zero_division=0))
+        tp = np.sum((y_t == 1) & (y_p == 1))
+        fp = np.sum((y_t == 0) & (y_p == 1))
+        fn = np.sum((y_t == 1) & (y_p == 0))
+        tn = np.sum((y_t == 0) & (y_p == 0))
+        
+        acc = (tp + tn) / n_samples
+        prec = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        rec = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        f1 = (2.0 * prec * rec) / (prec + rec) if (prec + rec) > 0 else 0.0
+        
+        boot_acc.append(acc)
+        boot_prec.append(prec)
+        boot_rec.append(rec)
+        boot_f1.append(f1)
         
     return {
         "accuracy": {
@@ -89,30 +99,46 @@ def compute_bootstrap_ci(
     }
 
 def evaluate_per_scam_type(test_df: pd.DataFrame, y_pred: np.ndarray) -> Dict[str, Any]:
-    """Computes detection recall and precision per individual scam category."""
+    """Computes per-scam-type precision, recall, and F1-score across all categories."""
     results = {}
     test_df_copy = test_df.copy()
     test_df_copy["pred"] = y_pred
     
+    benign_mask = test_df_copy["label"] == 0
+    benign_total = benign_mask.sum()
+    fp_benign_as_scam = (benign_mask & (test_df_copy["pred"] == 1)).sum()
+    tn_benign = (benign_mask & (test_df_copy["pred"] == 0)).sum()
+    
     for scam_type, group in test_df_copy.groupby("scam_type"):
         support = len(group)
         if scam_type == "benign":
-            # For benign, accuracy is Specificity (correctly identified benign)
-            correct = (group["pred"] == 0).sum()
-            accuracy = correct / support if support > 0 else 0.0
+            spec = tn_benign / benign_total if benign_total > 0 else 0.0
+            fn_scams_as_benign = ((test_df_copy["label"] == 1) & (test_df_copy["pred"] == 0)).sum()
+            benign_prec = tn_benign / (tn_benign + fn_scams_as_benign) if (tn_benign + fn_scams_as_benign) > 0 else 0.0
+            benign_f1 = (2.0 * benign_prec * spec) / (benign_prec + spec) if (benign_prec + spec) > 0 else 0.0
             results[scam_type] = {
                 "sample_count": int(support),
-                "correctly_classified": int(correct),
-                "specificity": round(float(accuracy), 4)
+                "correctly_classified": int(tn_benign),
+                "specificity": round(float(spec), 4),
+                "precision": round(float(benign_prec), 4),
+                "recall": round(float(spec), 4),
+                "f1_score": round(float(benign_f1), 4)
             }
         else:
-            # For scam types, recall is the fraction correctly detected as scam (pred == 1)
-            detected = (group["pred"] == 1).sum()
-            recall = detected / support if support > 0 else 0.0
+            tp = (group["pred"] == 1).sum()
+            fn = (group["pred"] == 0).sum()
+            rec = tp / support if support > 0 else 0.0
+            prec = tp / (tp + fp_benign_as_scam) if (tp + fp_benign_as_scam) > 0 else 0.0
+            f1 = (2.0 * prec * rec) / (prec + rec) if (prec + rec) > 0 else 0.0
+            
             results[scam_type] = {
                 "sample_count": int(support),
-                "detected_count": int(detected),
-                "detection_recall": round(float(recall), 4)
+                "detected_count": int(tp),
+                "missed_count": int(fn),
+                "detection_recall": round(float(rec), 4),
+                "recall": round(float(rec), 4),
+                "precision": round(float(prec), 4),
+                "f1_score": round(float(f1), 4)
             }
     return results
 
@@ -122,7 +148,7 @@ def generate_error_analysis(
     y_prob: np.ndarray,
     output_path: Path
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
-    """Identifies and taxonomizes all False Positives and False Negatives."""
+    """Identifies, taxonomizes, and analyzes all False Positives and False Negatives."""
     errors = []
     y_true = test_df["label"].to_numpy()
     
@@ -152,12 +178,20 @@ def generate_error_analysis(
     fp_cnt = int((err_df["error_type"] == "False Positive").sum()) if not err_df.empty else 0
     fn_cnt = int((err_df["error_type"] == "False Negative").sum()) if not err_df.empty else 0
     
+    fp_langs = err_df[err_df["error_type"] == "False Positive"]["language"].value_counts().to_dict() if fp_cnt > 0 else {}
+    fn_types = err_df[err_df["error_type"] == "False Negative"]["scam_type"].value_counts().to_dict() if fn_cnt > 0 else {}
+    
+    fp_summary = f"False Positives ({fp_cnt} total) occur in languages {fp_langs}, driven by formal banking transaction notices or urgent timestamps that mimic cyber alerts."
+    fn_summary = f"False Negatives ({fn_cnt} total) are concentrated in categories {fn_types}, where conversational job offers or informal advance-fee solicitations lack explicit technical indicators."
+    
     summary = {
         "total_misclassifications": len(err_df),
         "false_positive_count": fp_cnt,
         "false_negative_count": fn_cnt,
-        "fp_causes_summary": "Legitimate banking alerts or OTP notifications containing financial figures and urgent timestamps occasionally trigger benign alarms.",
-        "fn_causes_summary": "Subtle conversational job offerings or obfuscated adversarial text with low keyword density occasionally fall below the decision threshold."
+        "fp_breakdown_by_language": fp_langs,
+        "fn_breakdown_by_scam_type": fn_types,
+        "fp_causes_summary": fp_summary,
+        "fn_causes_summary": fn_summary
     }
     return err_df, summary
 

@@ -1,19 +1,30 @@
 {
   "dataset_name": "BobSec Indian & Multilingual Scam Detection Corpus (Expanded Academic Release v2)",
   "total_dataset_size": 2114,
-  "training_samples": 1404,
-  "validation_samples": 199,
-  "test_samples": 511,
+  "training_samples": 1289,
+  "validation_samples": 240,
+  "test_samples": 585,
+  "benign_count": 901,
+  "scam_count": 1213,
   "benign_samples": 901,
   "scam_samples": 1213,
-  "real_public_samples": 2042,
-  "real_public_percentage": 96.59,
-  "synthetic_samples": 72,
+  "real_public_count": 887,
+  "real_public_percentage": 41.96,
+  "manual_curated_count": 1155,
+  "manual_curated_percentage": 54.64,
+  "synthetic_count": 72,
   "synthetic_percentage": 3.41,
-  "unique_source_groups": 176,
-  "exact_duplicates_removed": 131,
-  "near_duplicates_removed": 359,
-  "source_group_leakage": 0,
+  "total_non_synthetic_count": 2042,
+  "total_non_synthetic_percentage": 96.59,
+  "english_count": 1676,
+  "hindi_count": 121,
+  "hinglish_count": 195,
+  "other_language_counts": {
+    "ta": 37,
+    "te": 37,
+    "kn": 24,
+    "ml": 24
+  },
   "languages": {
     "en": 1676,
     "hi-en": 195,
@@ -22,6 +33,19 @@
     "te": 37,
     "kn": 24,
     "ml": 24
+  },
+  "per_scam_type_count": {
+    "benign": 901,
+    "phishing": 189,
+    "job_scam": 144,
+    "upi_fraud": 137,
+    "bank_kyc": 131,
+    "courier_scam": 131,
+    "investment_scam": 120,
+    "digital_arrest": 110,
+    "fake_customer_care": 100,
+    "lottery_reward": 96,
+    "other_scam": 55
   },
   "scam_types": {
     "benign": 901,
@@ -36,6 +60,13 @@
     "lottery_reward": 96,
     "other_scam": 55
   },
+  "unique_source_groups": 176,
+  "duplicate_count_removed": 131,
+  "exact_duplicates_removed": 131,
+  "near_duplicate_count_removed": 359,
+  "near_duplicates_removed": 359,
+  "final_feature_count": 6000,
+  "source_group_leakage": 0,
   "sources": {
     "curated_cyber_threat_intelligence": 660,
     "cert_in_and_i4c_telemetry": 481,
@@ -45,11 +76,11 @@
     "synthetic_adversarial_augmentation": 72
   },
   "test_set_details": {
-    "size": 511,
-    "benign_count": 234,
-    "scam_count": 277,
-    "real_samples": 504,
-    "synthetic_samples": 7,
-    "unique_groups": 44
+    "size": 585,
+    "benign_count": 228,
+    "scam_count": 357,
+    "real_samples": 566,
+    "synthetic_samples": 19,
+    "unique_groups": 45
   }
 }

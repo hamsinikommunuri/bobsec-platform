@@ -9,7 +9,7 @@
   "activation": "relu",
   "optimizer": "adam",
   "learning_rate_init": 0.001,
-  "alpha_l2_regularization": 0.0005,
+  "alpha_l2_regularization": 0.0001,
   "max_iter": 200,
   "early_stopping": true,
   "random_seed": 42
