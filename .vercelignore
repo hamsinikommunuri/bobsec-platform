@@ -1,0 +1,18 @@
+# Development and documentation
+docs/
+ml/reports/
+ml/tests/
+server/tests/
+
+# Large training datasets and raw joblib weights
+ml/artifacts/*.joblib
+ml/artifacts/model_weights.json
+ml/artifacts/train_split.csv
+ml/artifacts/test_split.csv
+ml/data/
+
+# Cache and temporary
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.sqlite
