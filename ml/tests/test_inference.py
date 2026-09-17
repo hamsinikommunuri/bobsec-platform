@@ -9,7 +9,7 @@ def test_inference_output_schema():
     assert res["predicted_label"] in ["scam", "benign"]
     assert 0.0 <= res["scam_probability"] <= 1.0
     assert 0.50 <= res["confidence"] <= 1.0
-    assert res["model_version"] == "bobsec-mlp-v1"
+    assert res["model_version"].startswith("bobsec-mlp")
     assert res["source"] == "bobsec_custom_mlp"
 
 def test_obvious_scam_prediction():

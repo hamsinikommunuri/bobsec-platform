@@ -101,7 +101,31 @@ Detailed architectural flow & Mermaid diagrams: see [`docs/ARCHITECTURE.md`](doc
 
 ---
 
-## 4. Repository Structure
+## 4. Custom Neural Network & Machine Learning Subsystem (v2 Academic)
+
+BobSec includes a custom feedforward **3-layer Multilayer Perceptron (MLP)** neural network trained on an expanded, multi-source Indian fraud corpus to provide high-speed statistical prior probabilities to the multi-agent risk engine.
+
+### Key ML Highlights:
+- **Expanded Multi-Source Corpus ($N = 2,114$)**: Curated from CERT-In citizen telemetry, I4C cyber threat intelligence, UCI SMS mobile corpus, authentic Indian banking/telecom alerts, and adversarial augmentations (96.59% real/public provenance).
+- **11 Threat Categories & 7 Languages**: Covers Bank KYC, Digital Arrest, UPI Fraud, Phishing, Fake Customer Care, Job Scams, Courier Scams, Investment Schemes, Lottery Rewards, Other Fraud, and Benign Controls across English, Hinglish, Hindi, Tamil, Telugu, Kannada, and Malayalam.
+- **Zero Leakage Group-Aware Partitioning**: Enforces strict `GroupShuffleSplit` across 176 threat template groups ($G_{\text{train}} \cap G_{\text{val}} \cap G_{\text{test}} = \emptyset$).
+- **Architecture**: 6,000-dimensional Word $(1, 2)$ and Character $(3, 5)$ TF-IDF FeatureUnion fed into a (256, 128, 64) ReLU hidden hierarchy with Adam optimization and validation-tuned $L_2$ regularization ($\alpha = 0.0005$).
+- **Rigorous Independent Evaluation ($N_{\text{test}} = 511$ across 44 unseen groups)**:
+  - **Accuracy**: **97.65%** (95% Bootstrap CI: [96.28%, 98.83%])
+  - **Scam Recall**: **100.00%** (Zero missed scams on test partition)
+  - **Scam Precision**: **0.9585** (95% CI: [0.9336, 0.9794])
+  - **F1-Score**: **0.9788** | **ROC-AUC**: **0.9976** | **PR-AUC**: **0.9979**
+- **Dual-Runtime Serverless Deployment**: Exports compact NumPy weights (`mlp_model.npz` ~2.8MB) and index mappings (`vocab.json` ~100KB) enabling zero-dependency inference on Vercel serverless functions in $<10\text{ms}$ well below the 250MB ceiling.
+- **Full Documentation**:
+  - Dataset Specification: [`docs/neural-network/DATASET.md`](docs/neural-network/DATASET.md)
+  - Training Procedure: [`docs/neural-network/TRAINING.md`](docs/neural-network/TRAINING.md)
+  - Rigorous Evaluation: [`docs/neural-network/EVALUATION.md`](docs/neural-network/EVALUATION.md)
+  - Neural Architecture: [`docs/neural-network/ARCHITECTURE.md`](docs/neural-network/ARCHITECTURE.md)
+  - System Integration: [`docs/neural-network/INTEGRATION.md`](docs/neural-network/INTEGRATION.md)
+
+---
+
+## 5. Repository Structure
 
 ```
 elegant-darwin/
@@ -137,7 +161,7 @@ elegant-darwin/
 
 ---
 
-## 5. Getting Started & Local Setup
+## 6. Getting Started & Local Setup
 
 ### Prerequisites
 - **Node.js**: `v20.0.0` or higher (Recommended: Node.js `v24+` for native `node:sqlite`).
@@ -170,7 +194,7 @@ The application will be accessible at:
 
 ---
 
-## 6. Environment Variables
+## 7. Environment Variables
 
 All configuration is managed through environment variables. Defaults are preconfigured for instant offline execution:
 
@@ -190,7 +214,7 @@ All configuration is managed through environment variables. Defaults are preconf
 
 ---
 
-## 7. Demo Mode vs. Live AI Mode
+## 8. Demo Mode vs. Live AI Mode
 
 ### Sovereign Demo Mode (`DEMO_MODE=true`)
 - **Default State**: Requires zero external credentials, API keys, or cloud connectivity.
@@ -206,7 +230,7 @@ All configuration is managed through environment variables. Defaults are preconf
 
 ---
 
-## 8. API Overview
+## 9. API Overview
 
 BobSec provides a clean, versioned REST API. All responses follow consistent envelopes:
 
@@ -228,7 +252,7 @@ Detailed API payload specifications: see [`docs/API.md`](docs/API.md).
 
 ---
 
-## 9. Security & Privacy Model
+## 10. Security & Privacy Model
 
 - **`USER_INPUT == DATA`**: Scam messages containing jailbreaks (e.g. *"Ignore previous instructions"*) are treated strictly as untrusted data. The `PromptFirewall` intercepts overrides and applies an adversarial risk penalty.
 - **PII Obfuscation**: Indian phone numbers (`+91 98******10`), emails (`v***r@example.com`), and UPI handles (`u***r@bank`) are masked prior to rendering or logging.
@@ -240,22 +264,25 @@ Detailed security documentation: see [`docs/SECURITY.md`](docs/SECURITY.md).
 
 ---
 
-## 10. Testing
+## 11. Testing & Validation
 
-BobSec features a 100% automated test suite spanning unit and integration tests:
+BobSec features an automated test suite spanning full-stack and ML subsystems:
 
 ```bash
-# Run unit and integration test suite:
-npm test
+# 1. Run Node.js 24 Server Unit & Integration tests (41 passing tests):
+cmd.exe /c npm test
+
+# 2. Run Python ML Neural Network Unit & Robustness tests (28 passing tests):
+python -m pytest ml/tests -v
 ```
 
 ### Test Coverage Highlights:
-- **17 Unit Tests**: Deterministic scoring calculations, PII masking algorithms, prompt injection interception, Indian entity regex extractors, and Zod validation schemas.
-- **15 Integration Tests**: End-to-end analysis runs across Bank KYC, Digital Arrest, Job Scams, UPI Collect Traps, Prompt Injection attacks, Benign Controls, Hindi localization, and Cybercrime 1930 draft generation.
+- **28 Python ML Tests**: Multi-source dataset integrity (2,114 samples), 11 category coverage, 7 language diversity, zero source-group data leakage, MLP architecture, serverless npz export, and adversarial robustness (ALL CAPS, typos, spaced keywords, Hinglish, legitimate banking resilience).
+- **41 Node.js Tests**: Deterministic scoring calculations, PII masking algorithms, prompt injection interception, Indian entity regex extractors, SQLite persistence, and end-to-end multi-agent orchestration with Neural Agent integration.
 
 ---
 
-## 11. Known Limitations & Roadmap
+## 12. Known Limitations & Roadmap
 
 ### Known Limitations
 - **Local Heuristics**: In offline demo mode, domain reputations and phone series checks rely on local pattern heuristics rather than live carrier CNAM lookups.
@@ -269,6 +296,6 @@ npm test
 
 ---
 
-## 12. License
+## 13. License
 
 Distributed under the MIT License. See `LICENSE` for more information.

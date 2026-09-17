@@ -36,7 +36,7 @@ class handler(BaseHTTPRequestHandler):
         response = {
             "status": "UP",
             "service": "bobsec-python-mlp-inference",
-            "model_version": "bobsec-mlp-v1",
+            "model_version": "bobsec-mlp-v2-academic",
             "architecture": "MLP (256, 128, 64) with Word+Char TF-IDF"
         }
         self.wfile.write(json.dumps(response).encode("utf-8"))
@@ -74,7 +74,7 @@ class handler(BaseHTTPRequestHandler):
             error_response = {
                 "error": "Internal Inference Error",
                 "message": str(e),
-                "model_version": "bobsec-mlp-v1",
+                "model_version": "bobsec-mlp-v2-academic",
                 "fallback": True
             }
             self.wfile.write(json.dumps(error_response).encode("utf-8"))

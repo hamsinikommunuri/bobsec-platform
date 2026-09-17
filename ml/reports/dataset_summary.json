@@ -1,36 +1,55 @@
 {
-  "total_samples": 138,
-  "scam_samples": 96,
-  "benign_samples": 42,
-  "unique_source_groups": 99,
-  "scam_types_distribution": {
-    "benign": 42,
-    "bank_kyc": 31,
-    "upi_fraud": 22,
-    "digital_arrest": 9,
-    "job_scam": 8,
-    "phishing": 8,
-    "courier_scam": 6,
-    "investment_scam": 6,
-    "lottery_reward": 4,
-    "other_scam": 2
+  "dataset_name": "BobSec Indian & Multilingual Scam Detection Corpus (Expanded Academic Release v2)",
+  "total_dataset_size": 2114,
+  "training_samples": 1404,
+  "validation_samples": 199,
+  "test_samples": 511,
+  "benign_samples": 901,
+  "scam_samples": 1213,
+  "real_public_samples": 2042,
+  "real_public_percentage": 96.59,
+  "synthetic_samples": 72,
+  "synthetic_percentage": 3.41,
+  "unique_source_groups": 176,
+  "exact_duplicates_removed": 131,
+  "near_duplicates_removed": 359,
+  "source_group_leakage": 0,
+  "languages": {
+    "en": 1676,
+    "hi-en": 195,
+    "hi": 121,
+    "ta": 37,
+    "te": 37,
+    "kn": 24,
+    "ml": 24
   },
-  "languages_distribution": {
-    "en": 132,
-    "hi-en": 6
+  "scam_types": {
+    "benign": 901,
+    "phishing": 189,
+    "job_scam": 144,
+    "upi_fraud": 137,
+    "bank_kyc": 131,
+    "courier_scam": 131,
+    "investment_scam": 120,
+    "digital_arrest": 110,
+    "fake_customer_care": 100,
+    "lottery_reward": 96,
+    "other_scam": 55
   },
-  "provenance_distribution": {
-    "synthetic_procedural_bank_expansion": 36,
-    "synthetic_template_expansion": 25,
-    "genuine_indian_sms_alerts": 18,
-    "synthetic_procedural_benign_expansion": 16,
-    "curated_indian_bank_telemetry": 9,
-    "cert_in_advisories_and_fir_records": 8,
-    "curated_upi_telemetry": 7,
-    "cybercrime_portal_telemetry": 5,
-    "customs_advisories_and_police_records": 4,
-    "fintech_fraud_bulletins": 4,
-    "kbc_police_fraud_warnings": 4,
-    "phishing_feed_curated": 2
+  "sources": {
+    "curated_cyber_threat_intelligence": 660,
+    "cert_in_and_i4c_telemetry": 481,
+    "uci_sms_corpus": 406,
+    "curated_indian_telecom_banking": 285,
+    "curated_multilingual_indian_corpus": 210,
+    "synthetic_adversarial_augmentation": 72
+  },
+  "test_set_details": {
+    "size": 511,
+    "benign_count": 234,
+    "scam_count": 277,
+    "real_samples": 504,
+    "synthetic_samples": 7,
+    "unique_groups": 44
   }
 }

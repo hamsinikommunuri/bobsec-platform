@@ -8,8 +8,10 @@ server/tests/
 ml/artifacts/*.joblib
 ml/artifacts/model_weights.json
 ml/artifacts/train_split.csv
+ml/artifacts/val_split.csv
 ml/artifacts/test_split.csv
 ml/data/
+ml/src/dataset_sources/
 
 # Cache and temporary
 __pycache__/

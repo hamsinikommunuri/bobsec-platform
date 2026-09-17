@@ -1,0 +1,13 @@
+original_id,error_type,true_label,predicted_label,scam_probability,scam_type,language,source_group,source,is_synthetic,text_snippet
+IND_HI_0045,False Positive,benign,scam,0.6283,benign,hi,hi_grp_012,curated_multilingual_indian_corpus,False,"घर का राशन मंगाना है, क्या तुम रास्ते से 2 किलो चीनी और चायपत्ती ले आओगे?"
+IND_HI_0047,False Positive,benign,scam,0.6245,benign,hi,hi_grp_012,curated_multilingual_indian_corpus,False,सब्जी मंडी से ताज़ा सब्जियाँ और फल लेते आना भाई।
+IND_KN_0182,False Positive,benign,scam,0.5659,benign,kn,kn_grp_001,curated_multilingual_indian_corpus,False,"ನಮಸ್ಕಾರ, ಪ್ರಾಜೆಕ್ಟ್ ಸಭೆ ನಾಳೆ ಬೆಳಿಗ್ಗೆ 10:00 ಗಂಟೆಗೆ ಸಭಾಂಗಣದಲ್ಲಿ ನಡೆಯಲಿದೆ."
+IND_KN_0184,False Positive,benign,scam,0.951,benign,kn,kn_grp_001,curated_multilingual_indian_corpus,False,ಸಭೆಯ ವಿವರಗಳು ಮತ್ತು ಪ್ರಸ್ತುತಿ ಕಡತಗಳನ್ನು ಇಮೇಲ್ ಮಾಡಲಾಗಿದೆ.
+IND_KN_0186,False Positive,benign,scam,0.9451,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಅಮ್ಮಾ, ನಾನು ಕಚೇರಿಯಿಂದ ಹೊರಟಿದ್ದೇನೆ, ರಾತ್ರಿ 8 ಗಂಟೆಗೆ ಮನೆಗೆ ಬರುತ್ತೇನೆ."
+IND_KN_0188,False Positive,benign,scam,0.9564,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಕೆಲಸ ಮುಗಿದಿದೆ ಅಮ್ಮಾ, ಊಟ ರೆಡಿ ಮಾಡಿಡು, ಈಗಲೇ ಹೊರಡುತ್ತಿದ್ದೇನೆ."
+IND_KN_0189,False Positive,benign,scam,0.9407,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಅಮ್ಮಾ, ಬಸ್ ಹತ್ತಿದ್ದೇನೆ, ಇನ್ನೊಂದು ಅರ್ಧ ಗಂಟೆಯಲ್ಲಿ ಮನೆಗೆ ತಲುಪುತ್ತೇನೆ."
+IND_KN_0190,False Positive,benign,scam,0.9651,benign,kn,kn_grp_002,curated_multilingual_indian_corpus,False,"ಚಿಂತೆ ಮಾಡಬೇಡ ಅಮ್ಮಾ, ಇನ್ನೇನು ಸ್ವಲ್ಪ ಹೊತ್ತಿನಲ್ಲಿ ಮನೆಗೆ ಬಂದುಬಿಡುತ್ತೇನೆ."
+IND_KN_0192,False Positive,benign,scam,0.9286,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,"ಬೆಸ್ಕಾಂ: ಆಗಸ್ಟ್ ತಿಂಗಳ ವಿದ್ಯುತ್ ಬಿಲ್ ರೂ. 1,280 ಯಶಸ್ವಿಯಾಗಿ ಜಮೆಯಾಗಿದೆ."
+IND_KN_0193,False Positive,benign,scam,0.9707,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ವಿದ್ಯುತ್ ಬಿಲ್ ಪಾವತಿಸಿದ್ದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು. ರಶೀದಿ ಇಮೇಲ್ ಮಾಡಲಾಗಿದೆ.
+IND_KN_0194,False Positive,benign,scam,0.9675,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ಭಾರತ್ ಬಿಲ್‌ಪೇ ಮೂಲಕ ವಿದ್ಯುತ್ ಬಿಲ್ ಪಾವತಿ ಯಶಸ್ವಿಯಾಗಿ ಪೂರ್ಣಗೊಂಡಿದೆ.
+IND_KN_0195,False Positive,benign,scam,0.9607,benign,kn,kn_grp_003,curated_multilingual_indian_corpus,False,ನಿಮ್ಮ ಬಿಲ್ ಪಾವತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ. ಮುಂದಿನ ಗಡುವು ದಿನಾಂಕ ಅಕ್ಟೋಬರ್ 15.

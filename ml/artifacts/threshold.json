@@ -2,5 +2,8 @@
   "decision_threshold": 0.5,
   "high_confidence_scam_threshold": 0.85,
   "moderate_scam_threshold": 0.65,
-  "uncertainty_margin": 0.15
+  "uncertainty_margin": 0.15,
+  "calibrated_on": "validation_split",
+  "validation_f1": 0.9576,
+  "validation_recall": 0.9187
 }

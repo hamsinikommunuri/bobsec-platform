@@ -1,33 +1,120 @@
 {
-  "model_name": "BobSec Custom MLPClassifier",
-  "held_out_test_samples": 28,
-  "accuracy": 1.0,
-  "precision": 1.0,
-  "recall": 1.0,
-  "f1_score": 1.0,
-  "macro_precision": 1.0,
-  "macro_recall": 1.0,
-  "macro_f1": 1.0,
-  "weighted_f1": 1.0,
-  "roc_auc": 1.0,
-  "pr_auc": 1.0,
-  "confusion_matrix": {
-    "true_negatives": 9,
-    "false_positives": 0,
-    "false_negatives": 0,
-    "true_positives": 19
+  "evaluation_dataset": "BobSec Held-Out Test Split (Group-Aware Independent)",
+  "test_samples": 511,
+  "unique_test_source_groups": 44,
+  "decision_threshold": 0.5,
+  "primary_model": {
+    "name": "BobSec Custom MLPClassifier",
+    "architecture": "(256, 128, 64) with ReLU and Adam",
+    "accuracy": 0.9765,
+    "precision": 0.9585,
+    "recall": 1.0,
+    "f1_score": 0.9788,
+    "macro_precision": 0.9792,
+    "macro_recall": 0.9744,
+    "macro_f1": 0.9762,
+    "weighted_f1": 0.9765,
+    "specificity": 0.9487,
+    "false_positive_rate": 0.0513,
+    "false_negative_rate": 0.0,
+    "roc_auc": 0.9976,
+    "pr_auc": 0.9979,
+    "confusion_matrix": {
+      "true_negatives": 222,
+      "false_positives": 12,
+      "false_negatives": 0,
+      "true_positives": 277
+    },
+    "confidence_intervals_95": {
+      "accuracy": {
+        "mean": 0.9762,
+        "ci_lower": 0.9628,
+        "ci_upper": 0.9883
+      },
+      "precision": {
+        "mean": 0.9579,
+        "ci_lower": 0.9336,
+        "ci_upper": 0.9794
+      },
+      "recall": {
+        "mean": 1.0,
+        "ci_lower": 1.0,
+        "ci_upper": 1.0
+      },
+      "f1_score": {
+        "mean": 0.9785,
+        "ci_lower": 0.9656,
+        "ci_upper": 0.9896
+      }
+    }
   },
-  "false_positive_rate": 0.0,
-  "false_negative_rate": 0.0,
   "baseline_comparison": {
-    "model_name": "Baseline LogisticRegression",
-    "accuracy": 0.8929,
-    "f1_score": 0.9268,
-    "roc_auc": 1.0
+    "name": "Baseline Logistic Regression",
+    "accuracy": 0.9765,
+    "precision": 0.9585,
+    "recall": 1.0,
+    "f1_score": 0.9788,
+    "roc_auc": 0.9997,
+    "pr_auc": 0.9997,
+    "confusion_matrix": {
+      "true_negatives": 222,
+      "false_positives": 12,
+      "false_negatives": 0,
+      "true_positives": 277
+    }
   },
-  "cybersecurity_notes": {
-    "scam_recall_importance": "In cybersecurity scam detection, high Recall is prioritized to minimize False Negatives (missed attacks).",
+  "per_scam_type_performance": {
+    "bank_kyc": {
+      "sample_count": 3,
+      "detected_count": 3,
+      "detection_recall": 1.0
+    },
+    "benign": {
+      "sample_count": 234,
+      "correctly_classified": 222,
+      "specificity": 0.9487
+    },
+    "digital_arrest": {
+      "sample_count": 12,
+      "detected_count": 12,
+      "detection_recall": 1.0
+    },
+    "fake_customer_care": {
+      "sample_count": 48,
+      "detected_count": 48,
+      "detection_recall": 1.0
+    },
+    "job_scam": {
+      "sample_count": 36,
+      "detected_count": 36,
+      "detection_recall": 1.0
+    },
+    "lottery_reward": {
+      "sample_count": 32,
+      "detected_count": 32,
+      "detection_recall": 1.0
+    },
+    "other_scam": {
+      "sample_count": 30,
+      "detected_count": 30,
+      "detection_recall": 1.0
+    },
+    "phishing": {
+      "sample_count": 73,
+      "detected_count": 73,
+      "detection_recall": 1.0
+    },
+    "upi_fraud": {
+      "sample_count": 43,
+      "detected_count": 43,
+      "detection_recall": 1.0
+    }
+  },
+  "error_analysis_summary": {
+    "total_misclassifications": 12,
+    "false_positive_count": 12,
     "false_negative_count": 0,
-    "false_positive_count": 0
+    "fp_causes_summary": "Legitimate banking alerts or OTP notifications containing financial figures and urgent timestamps occasionally trigger benign alarms.",
+    "fn_causes_summary": "Subtle conversational job offerings or obfuscated adversarial text with low keyword density occasionally fall below the decision threshold."
   }
 }

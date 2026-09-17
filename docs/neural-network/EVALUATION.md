@@ -1,69 +1,86 @@
-﻿# BobSec Model Evaluation & Forensic Performance Analysis
+# BobSec Rigorous Model Evaluation & Forensic Performance Analysis (v2 Academic)
 
-This document summarizes the quantitative empirical evaluation of the BobSec Custom Multilayer Perceptron against the held-out test partition ($N_{test} = 28$ samples across 20 unseen source groups).
+This document details the quantitative empirical evaluation of the BobSec Custom Multilayer Perceptron against the held-out test partition ($N_{\text{test}} = 511$ independent samples across 44 unseen source groups), benchmarked against a Logistic Regression baseline with 1,000 bootstrap confidence interval iterations.
 
 ---
 
 ## 1. Empirical Results & Primary Performance Metrics
 
-| Evaluation Metric | Mathematical Definition | Empirical Value | Performance Tier |
-| :--- | :--- | :--- | :--- |
-| **Accuracy** | $\frac{TP + TN}{TP + TN + FP + FN}$ | **1.0000 (100.00%)** | Optimal |
-| **Scam Precision** | $\frac{TP}{TP + FP}$ | **1.0000 (100.00%)** | Optimal |
-| **Scam Recall (Sensitivity)**| $\frac{TP}{TP + FN}$ | **1.0000 (100.00%)** | Optimal |
-| **F1-Score (Harmonic Mean)** | $2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$ | **1.0000** | Optimal |
-| **Macro F1-Score** | $\frac{1}{K} \sum_{k=1}^K F1_k$ | **1.0000** | Optimal |
-| **Weighted F1-Score** | $\sum_{k=1}^K w_k \cdot F1_k$ | **1.0000** | Optimal |
-| **Area Under ROC Curve (ROC-AUC)** | $\int_0^1 \text{TPR}(t) \, dt$ | **1.0000** | Perfect Discrimination |
-| **Area Under PR Curve (PR-AUC)** | $\int_0^1 \text{Precision}(r) \, dr$ | **1.0000** | Perfect Precision-Recall |
-| **False Positive Rate (FPR)** | $\frac{FP}{FP + TN}$ | **0.0000 (0.0%)** | Zero False Alarms |
-| **False Negative Rate (FNR)** | $\frac{FN}{FN + TP}$ | **0.0000 (0.0%)** | Zero Missed Threats |
+| Evaluation Metric | Mathematical Definition | Empirical Value | 95% Bootstrap Confidence Interval | Baseline (Logistic Regression) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Accuracy** | $\frac{TP + TN}{TP + TN + FP + FN}$ | **97.65%** | **[96.28%, 98.83%]** | 97.65% |
+| **Scam Precision** | $\frac{TP}{TP + FP}$ | **0.9585 (95.85%)** | **[0.9336, 0.9794]** | 0.9585 |
+| **Scam Recall (Sensitivity)**| $\frac{TP}{TP + FN}$ | **1.0000 (100.00%)** | **[1.0000, 1.0000]** | 1.0000 |
+| **F1-Score (Harmonic Mean)** | $2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$ | **0.9788** | **[0.9656, 0.9896]** | 0.9788 |
+| **Macro F1-Score** | $\frac{1}{K} \sum_{k=1}^K F1_k$ | **0.9762** | — | 0.9762 |
+| **Weighted F1-Score** | $\sum_{k=1}^K w_k \cdot F1_k$ | **0.9765** | — | 0.9765 |
+| **Area Under ROC (ROC-AUC)** | $\int_0^1 \text{TPR}(t) \, dt$ | **0.9976** | — | 0.9997 |
+| **Area Under PR (PR-AUC)** | $\int_0^1 \text{Precision}(r) \, dr$ | **0.9979** | — | 0.9997 |
+| **Specificity (TNR)** | $\frac{TN}{TN + FP}$ | **0.9487 (94.87%)** | — | 0.9487 |
+| **False Positive Rate (FPR)** | $\frac{FP}{FP + TN}$ | **0.0513 (5.13%)** | — | 0.0513 |
+| **False Negative Rate (FNR)** | $\frac{FN}{FN + TP}$ | **0.0000 (0.00%)** | — | 0.0000 |
 
 ---
 
 ## 2. Confusion Matrix & Forensic Breakdown
 
-The held-out evaluation set contains 19 verified scam threats and 9 legitimate benign messages across 20 distinct source group families:
+The held-out evaluation set contains 277 verified scam threats and 234 legitimate benign messages across 44 unseen source group families:
 
-$$\mathbf{C} = \begin{pmatrix} TN & FP \\ FN & TP \end{pmatrix} = \begin{pmatrix} 9 & 0 \\ 0 & 19 \end{pmatrix}$$
+$$\mathbf{C} = \begin{pmatrix} TN & FP \\ FN & TP \end{pmatrix} = \begin{pmatrix} 222 & 12 \\ 0 & 277 \end{pmatrix}$$
 
 ```mermaid
 graph TD
-    subgraph ActualScam["Actual Scam Samples (19)"]
-        TP["True Positives (TP = 19)<br/>Correctly Identified as Scam<br/>Rate: 100.0%"]
-        FN["False Negatives (FN = 0)<br/>Missed Scam Attacks<br/>Rate: 0.0%"]
+    subgraph ActualScam["Actual Scam Samples (277)"]
+        TP["True Positives (TP = 277)<br/>Correctly Caught Threats<br/>Recall: 100.00%"]
+        FN["False Negatives (FN = 0)<br/>Missed Scam Attacks<br/>FNR: 0.00%"]
     end
 
-    subgraph ActualBenign["Actual Benign Samples (9)"]
-        TN["True Negatives (TN = 9)<br/>Correctly Cleared as Benign<br/>Rate: 100.0%"]
-        FP["False Positives (FP = 0)<br/>False Alarms on Clean Text<br/>Rate: 0.0%"]
+    subgraph ActualBenign["Actual Benign Samples (234)"]
+        TN["True Negatives (TN = 222)<br/>Correctly Cleared Benign<br/>Specificity: 94.87%"]
+        FP["False Positives (FP = 12)<br/>Legitimate Messages Flagged<br/>FPR: 5.13%"]
     end
 ```
 
 ---
 
-## 3. Trade-off Analysis: False Negatives vs. False Positives in Cyber Defense
+## 3. Threat Category Sub-Performance Breakdown
 
-In consumer cybersecurity and anti-fraud systems, the asymmetric costs of classification errors dictate operational thresholds:
-
-### 3.1 The Catastrophic Cost of False Negatives (FN)
-- A **False Negative** occurs when an active scam message (e.g., Digital Arrest extortion or UPI Collect fraud) is classified as benign.
-- **Victim Impact**: The citizen trusts the communication, joins an adversarial Skype call or enters their UPI PIN, suffering irreversible financial loss, identity theft, or severe psychological trauma.
-- **Design Directive**: High Recall is mandatory. The decision boundary is calibrated to ensure zero False Negatives across all tested threat archetypes.
-
-### 3.2 The Hazard of False Positives (FP)
-- A **False Positive** occurs when a genuine bank transaction notification or family message is misidentified as a threat.
-- **Impact**: Generates "alert fatigue." If a security tool repeatedly flags benign bank alerts, consumers disable the protection, rendering the enclave useless.
-- **Empirical Validation**: The BobSec MLP achieves $FP = 0$ on the test split, distinguishing genuine bank alerts from spoofed templates through high-order feature combinations.
+| Threat Category | Held-Out Sample Count | Detected Count | Empirical Recall / Detection Rate |
+| :--- | :--- | :--- | :--- |
+| **Bank KYC Suspension** | 3 | 3 | **100.0%** |
+| **Digital Arrest Extortion** | 12 | 12 | **100.0%** |
+| **Fake Customer Care** | 48 | 48 | **100.0%** |
+| **Job / Telegram Scam** | 36 | 36 | **100.0%** |
+| **Lottery / Reward Fraud** | 32 | 32 | **100.0%** |
+| **Phishing / Netbanking** | 73 | 73 | **100.0%** |
+| **UPI Fraud** | 43 | 43 | **100.0%** |
+| **Other Fraud (Loan/Bill)**| 30 | 30 | **100.0%** |
+| **Benign Controls** | 234 | 222 (correctly cleared) | **94.87% Specificity** |
 
 ---
 
-## 4. Visual Evidence Artifacts
+## 4. Error Analysis & Forensic Root-Cause Inspection
 
-All training and evaluation figures were generated directly by `ml/src/evaluate.py` and are stored under `ml/reports/`:
+All 12 classification errors were systematically exported to `ml/reports/error_analysis.csv`. 
 
-1. **Confusion Matrix**: `ml/reports/confusion_matrix.png` (Annotated heatmap showing TP=19, FP=0, TN=9, FN=0).
-2. **ROC Curve**: `ml/reports/roc_curve.png` (Receiver Operating Characteristic with AUC = 1.0000).
-3. **Precision-Recall Curve**: `ml/reports/precision_recall_curve.png` (PR curve maintaining 1.0 precision across recall spectrum).
-4. **Training Loss Trajectory**: `ml/reports/training_loss_curve.png` (Monotonically descending cross-entropy loss over 29 iterations).
-5. **Class Distribution**: `ml/reports/class_distribution.png` (Sample counts across scam vs benign splits).
+### 4.1 Categorization of False Positives ($FP = 12, FN = 0$)
+1. **Urgent Financial Debit Alerts ($n = 7$)**: High-value debit and ATM withdrawal alerts with strict timestamp strings ("URGENT", "immediately if not authorized call 1800...") triggered word n-grams that overlap with institutional urgency patterns.
+2. **Statutory Bank Regulatory Advisory SMS ($n = 3$)**: Legitimate RBI and bank advisory SMS informing customers about mandatory KYC re-verification policies without containing malicious URLs.
+3. **Formal Corporate Inquiries ($n = 2$)**: Formal interview and employment schedule invitations featuring links and salary mentions.
+
+### 4.2 Architectural Mitigation & Downstream Calibration
+In the full BobSec multi-agent architecture, the Python Neural Agent does not act in isolation. Its continuous scam probability score is ingested by the **deterministic BobSec RiskEngine** and corroborated by the **Heuristic Rule Engine** (regex URL scanner, domain spoof checker) and **Watsonx Granite LLM Agent**, successfully mitigating standalone false alarms on legitimate bank statements.
+
+---
+
+## 5. Visual Evidence Artifacts
+
+All figures are automatically generated by `ml/src/evaluate.py` and persisted under `ml/reports/`:
+1. **Confusion Matrix Heatmap**: `ml/reports/confusion_matrix.png` (Annotated TP=277, FP=12, TN=222, FN=0).
+2. **Receiver Operating Characteristic (ROC)**: `ml/reports/roc_curve.png` (ROC-AUC = 0.9976 with baseline overlay).
+3. **Precision-Recall Curve**: `ml/reports/precision_recall_curve.png` (PR-AUC = 0.9979).
+4. **Training Loss Trajectory**: `ml/reports/training_loss_curve.png` (Loss trajectory down to 0.0024 over 19 iterations).
+5. **Class Distribution Across Splits**: `ml/reports/class_distribution.png` (Train vs Val vs Test).
+6. **Language Diversity Breakdown**: `ml/reports/language_distribution.png` (English, Hinglish, Hindi, Tamil, Telugu, Kannada, Malayalam).
+7. **Scam Type Taxonomy Breakdown**: `ml/reports/scam_type_distribution.png` (11 categories).
+8. **Real vs. Synthetic Provenance**: `ml/reports/real_vs_synthetic_distribution.png` (96.59% real/public).

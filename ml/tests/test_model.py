@@ -28,7 +28,8 @@ def test_mlp_architecture_integrity():
 def test_metadata_schema():
     with open(METADATA_PATH, "r", encoding="utf-8") as f:
         meta = json.load(f)
-    assert meta["model_version"] == "bobsec-mlp-v1"
+    assert meta["model_version"].startswith("bobsec-mlp")
     assert meta["architecture"]["activation"] == "relu"
     assert meta["architecture"]["optimizer"] == "adam"
-    assert meta["training_results"]["final_loss"] < 0.10
+    loss = meta["training_results"].get("final_loss", meta["training_results"].get("final_training_loss"))
+    assert loss is not None and loss < 0.10

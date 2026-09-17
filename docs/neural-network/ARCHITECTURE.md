@@ -1,4 +1,4 @@
-﻿# BobSec Multilayer Perceptron (MLP) Architecture Specification
+# BobSec Multilayer Perceptron (MLP) Architecture Specification (v2 Academic)
 
 This document details the mathematical formulation, layer topology, forward propagation, loss optimization, and hyperparameters for the BobSec deep neural network subsystem.
 
@@ -8,12 +8,12 @@ This document details the mathematical formulation, layer topology, forward prop
 
 The BobSec neural network subsystem is a feedforward deep **Multilayer Perceptron (MLP)** designed to detect financial scams, social engineering vectors, and extortion attempts tailored specifically to Indian cybercrime patterns.
 
-The network receives high-dimensional TF-IDF feature representations ($D_{in} = 5,797$ dimensions) combining character n-grams ($3 \le n \le 5$) and word n-grams ($1 \le n \le 2$) and maps them through three non-linear hidden representations into a calibrated posterior scam probability.
+The network receives high-dimensional TF-IDF feature representations ($D_{in} = 6,000$ dimensions) combining character n-grams ($3 \le n \le 5$, 3,000 features) and word n-grams ($1 \le n \le 2$, 3,000 features) and maps them through three non-linear hidden representations into a calibrated posterior scam probability.
 
 ```mermaid
 graph LR
-    subgraph Input["Input Layer (5,797 Features)"]
-        X["Word N-Grams (1-2)<br/>+ Char N-Grams (3-5)<br/>Normalized TF-IDF"]
+    subgraph Input["Input Layer (6,000 Features)"]
+        X["Word N-Grams (1-2, 3K)<br/>+ Char N-Grams (3-5, 3K)<br/>Normalized TF-IDF"]
     end
 
     subgraph H1["Hidden Layer 1 (256 Units)"]
@@ -44,14 +44,14 @@ graph LR
 
 | Layer | Type | Input Dim | Output Dim | Weights Matrix | Bias Vector | Activation |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Input ($a^{[0]}$)** | Feature Vector | 5,797 | 5,797 | — | — | NFKC Normalization |
-| **Hidden Layer 1 ($a^{[1]}$)** | Fully Connected | 5,797 | 256 | $W^{[1]} \in \mathbb{R}^{5797 \times 256}$ | $b^{[1]} \in \mathbb{R}^{256}$ | $\text{ReLU}$ |
+| **Input ($a^{[0]}$)** | Feature Vector | 6,000 | 6,000 | — | — | NFKC Normalization |
+| **Hidden Layer 1 ($a^{[1]}$)** | Fully Connected | 6,000 | 256 | $W^{[1]} \in \mathbb{R}^{6000 \times 256}$ | $b^{[1]} \in \mathbb{R}^{256}$ | $\text{ReLU}$ |
 | **Hidden Layer 2 ($a^{[2]}$)** | Fully Connected | 256 | 128 | $W^{[2]} \in \mathbb{R}^{256 \times 128}$ | $b^{[2]} \in \mathbb{R}^{128}$ | $\text{ReLU}$ |
 | **Hidden Layer 3 ($a^{[3]}$)** | Fully Connected | 128 | 64 | $W^{[3]} \in \mathbb{R}^{128 \times 64}$ | $b^{[3]} \in \mathbb{R}^{64}$ | $\text{ReLU}$ |
 | **Output Layer ($a^{[4]}$)** | Classification Head | 64 | 2 | $W^{[4]} \in \mathbb{R}^{64 \times 2}$ | $b^{[4]} \in \mathbb{R}^{2}$ | $\text{Softmax}$ |
 
 ### Total Trainable Parameters:
-$$\text{Parameters} = (5,797 \times 256 + 256) + (256 \times 128 + 128) + (128 \times 64 + 64) + (64 \times 2 + 2) = 1,525,442$$
+$$\text{Parameters} = (6,000 \times 256 + 256) + (256 \times 128 + 128) + (128 \times 64 + 64) + (64 \times 2 + 2) = 1,577,538$$
 
 ---
 
@@ -83,7 +83,7 @@ where $k = 0$ corresponds to **Benign** communications and $k = 1$ corresponds t
 
 ### 3.2 Loss Function: Regularized Binary Cross-Entropy
 
-The objective function minimizes the Cross-Entropy loss over $N$ training samples with $L_2$ weight regularization (weight decay $\alpha = 10^{-4}$):
+The objective function minimizes Cross-Entropy loss over $N_{\text{train}} = 1,404$ training samples with $L_2$ weight regularization ($\alpha = 0.0005$):
 
 $$\mathcal{J}(W, b) = -\frac{1}{N} \sum_{i=1}^{N} \left[ y^{(i)} \log \hat{y}^{(i)} + (1 - y^{(i)}) \log (1 - \hat{y}^{(i)}) \right] + \frac{\alpha}{2N} \sum_{l=1}^{L} \|W^{[l]}\|_F^2$$
 
@@ -106,6 +106,7 @@ v_t &= \beta_2 v_{t-1} + (1 - \beta_2) g_t^2 \quad &&\text{(Second Raw Moment Es
 
 Hyperparameters:
 - Initial Learning Rate $\eta = 0.001$
+- Regularization $\alpha = 0.0005$ (tuned on validation split)
 - Decay Factors $\beta_1 = 0.9$, $\beta_2 = 0.999$
 - Epsilon $\epsilon = 10^{-8}$
-- Batch Size: Full batch gradient updates on training split ($N = 110$)
+- Batch Size: Full batch gradient updates on training partition ($N_{\text{train}} = 1,404$)
