@@ -1,0 +1,33 @@
+{
+  "model_name": "BobSec Custom MLPClassifier",
+  "held_out_test_samples": 28,
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "macro_precision": 1.0,
+  "macro_recall": 1.0,
+  "macro_f1": 1.0,
+  "weighted_f1": 1.0,
+  "roc_auc": 1.0,
+  "pr_auc": 1.0,
+  "confusion_matrix": {
+    "true_negatives": 9,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 19
+  },
+  "false_positive_rate": 0.0,
+  "false_negative_rate": 0.0,
+  "baseline_comparison": {
+    "model_name": "Baseline LogisticRegression",
+    "accuracy": 0.8929,
+    "f1_score": 0.9268,
+    "roc_auc": 1.0
+  },
+  "cybersecurity_notes": {
+    "scam_recall_importance": "In cybersecurity scam detection, high Recall is prioritized to minimize False Negatives (missed attacks).",
+    "false_negative_count": 0,
+    "false_positive_count": 0
+  }
+}

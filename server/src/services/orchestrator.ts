@@ -14,23 +14,27 @@ import { ExplainerAgent } from '../agents/explainerAgent.js';
 import { PolicyCheckAgent } from '../agents/policyCheckAgent.js';
 import { RiskEngine } from './riskEngine.js';
 import { AIProvider } from './aiProvider.js';
+import { NeuralNetworkAgent } from './neuralNetworkAgent.js';
 import { generateId, generateHash, generateReportIntegrityHash } from '../utils/hasher.js';
 import { logger } from '../utils/logger.js';
 
 export interface OrchestratorOptions {
   aiProvider: AIProvider;
   riskEngine?: RiskEngine;
+  neuralAgent?: NeuralNetworkAgent;
   demoMode?: boolean;
 }
 
 export class BobSecOrchestrator {
   private aiProvider: AIProvider;
   private riskEngine: RiskEngine;
+  private neuralAgent: NeuralNetworkAgent;
   private demoMode: boolean;
 
   constructor(options: OrchestratorOptions) {
     this.aiProvider = options.aiProvider;
     this.riskEngine = options.riskEngine || new RiskEngine();
+    this.neuralAgent = options.neuralAgent || new NeuralNetworkAgent();
     this.demoMode = options.demoMode ?? true;
   }
 
@@ -57,6 +61,9 @@ export class BobSecOrchestrator {
       confidence: 99,
       status: 'COMPLETED'
     });
+
+    // Trigger Neural Network Agent inference early to run concurrently with other agents
+    const neuralPromise = this.neuralAgent.analyze(firewallResult.sanitizedText);
 
     // --- Step 2: ScamAgent ---
     const scamStart = Date.now();
@@ -126,6 +133,10 @@ export class BobSecOrchestrator {
       status: 'COMPLETED'
     });
 
+    // --- Step 5: NeuralNetworkAgent (Custom MLP Evaluation) ---
+    const neuralResult = await neuralPromise;
+    trace.push(neuralResult.traceNode);
+
     // Combine RedFlags and Recommendations
     const allRedFlags = [...scamResult.redFlags, ...bankResult.bankingRedFlags];
     const allRecommendations = [...consumerResult.recommendations, ...bankResult.bankingRecommendations];
@@ -135,7 +146,7 @@ export class BobSecOrchestrator {
       (rec, index, self) => index === self.findIndex((r) => r.text === rec.text)
     );
 
-    // --- Step 5: AI Provider Refinement (Optional LLM Enhancement) ---
+    // --- Step 6: AI Provider Refinement (Optional LLM Enhancement) ---
     let finalCategory = scamResult.category;
     let aiReasoning = '';
     if (this.aiProvider) {
@@ -152,15 +163,17 @@ export class BobSecOrchestrator {
       }
     }
 
-    // --- Deterministic Risk Engine Calculation ---
+    // --- Deterministic Risk Engine Calculation (with bounded neural signal) ---
+    const isBenign = finalCategory === 'BENIGN' && neuralResult.signal.scamProbability < 0.5;
     const riskVerdict = this.riskEngine.calculateScore(
       allRedFlags,
       intelResult.updatedEntities,
       firewallResult.containsInjectionAttempt,
-      finalCategory === 'BENIGN'
+      isBenign,
+      neuralResult.signal.riskContribution
     );
 
-    // --- Step 6: ExplainerAgent ---
+    // --- Step 7: ExplainerAgent ---
     const explainerStart = Date.now();
     const explanation = ExplainerAgent.explain(
       finalCategory,
@@ -200,7 +213,8 @@ export class BobSecOrchestrator {
         confidence: riskVerdict.confidence,
         category: finalCategory,
         categoryLabel: explanation.categoryLabel,
-        summary: explanation.summary
+        summary: explanation.summary,
+        nnModel: neuralResult.signal
       },
       redFlags: explanation.translatedRedFlags,
       entities: intelResult.updatedEntities,
@@ -212,10 +226,11 @@ export class BobSecOrchestrator {
         demoMode: this.demoMode,
         aiProvider: this.aiProvider.name,
         processingTimeMs
-      }
+      },
+      nnModel: neuralResult.signal
     };
 
-    // --- Step 7: PolicyCheckAgent ---
+    // --- Step 8: PolicyCheckAgent ---
     const policyStart = Date.now();
     const policyResult = PolicyCheckAgent.inspectAndSanitize(preliminaryResult);
 

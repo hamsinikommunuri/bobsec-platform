@@ -8,6 +8,12 @@ build/
 .vercel/
 *.tsbuildinfo
 
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
 # SQLite databases & temp data
 *.sqlite
 *.sqlite-journal

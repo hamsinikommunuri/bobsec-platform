@@ -23,6 +23,7 @@ export interface RiskEngineResult {
     signalsTotal: number;
     entityRiskAddon: number;
     injectionPenalty: number;
+    neuralNetworkSignal: number;
     rawSum: number;
     cappedScore: number;
   };
@@ -35,9 +36,10 @@ export class RiskEngine {
     redFlags: RedFlag[],
     entities: ExtractedEntity[],
     containsInjectionAttempt: boolean,
-    isBenignText = false
+    isBenignText = false,
+    neuralNetworkSignal = 0
   ): RiskEngineResult {
-    if (isBenignText && redFlags.length === 0) {
+    if (isBenignText && redFlags.length === 0 && neuralNetworkSignal === 0) {
       return {
         score: 5,
         level: 'Low Risk',
@@ -46,6 +48,7 @@ export class RiskEngine {
           signalsTotal: 0,
           entityRiskAddon: 0,
           injectionPenalty: 0,
+          neuralNetworkSignal: 0,
           rawSum: 5,
           cappedScore: 5
         }
@@ -72,7 +75,7 @@ export class RiskEngine {
     // Injection attempt penalty (attempting to override the system is a red flag itself)
     const injectionPenalty = containsInjectionAttempt ? 20 : 0;
 
-    const rawSum = signalsTotal + entityRiskAddon + injectionPenalty;
+    const rawSum = signalsTotal + entityRiskAddon + injectionPenalty + neuralNetworkSignal;
     const cappedScore = Math.min(100, Math.max(0, rawSum));
 
     const level = this.resolveLevel(cappedScore);
@@ -91,6 +94,7 @@ export class RiskEngine {
         signalsTotal,
         entityRiskAddon,
         injectionPenalty,
+        neuralNetworkSignal,
         rawSum,
         cappedScore
       }

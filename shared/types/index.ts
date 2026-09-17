@@ -66,6 +66,16 @@ export interface AgentTraceNode {
   status: 'COMPLETED' | 'FAILED' | 'SKIPPED';
 }
 
+export interface NeuralModelSignal {
+  label: 'scam' | 'benign';
+  scamProbability: number;
+  confidence: number;
+  modelVersion: string;
+  source: string;
+  riskContribution?: number;
+  status?: 'COMPLETED' | 'FALLBACK' | 'DISABLED';
+}
+
 export interface AnalysisVerdict {
   score: number; // 0 - 100
   level: RiskLevel;
@@ -73,6 +83,7 @@ export interface AnalysisVerdict {
   category: ScamCategory;
   categoryLabel: string;
   summary: string;
+  nnModel?: NeuralModelSignal;
 }
 
 export interface IntelligenceReport {
@@ -108,6 +119,7 @@ export interface AnalysisResult {
   agentTrace: AgentTraceNode[];
   intelligence: IntelligenceReport;
   metadata: AnalysisMetadata;
+  nnModel?: NeuralModelSignal;
 }
 
 export interface AnalysisSummaryItem {

@@ -1,0 +1,36 @@
+{
+  "total_samples": 138,
+  "scam_samples": 96,
+  "benign_samples": 42,
+  "unique_source_groups": 99,
+  "scam_types_distribution": {
+    "benign": 42,
+    "bank_kyc": 31,
+    "upi_fraud": 22,
+    "digital_arrest": 9,
+    "job_scam": 8,
+    "phishing": 8,
+    "courier_scam": 6,
+    "investment_scam": 6,
+    "lottery_reward": 4,
+    "other_scam": 2
+  },
+  "languages_distribution": {
+    "en": 132,
+    "hi-en": 6
+  },
+  "provenance_distribution": {
+    "synthetic_procedural_bank_expansion": 36,
+    "synthetic_template_expansion": 25,
+    "genuine_indian_sms_alerts": 18,
+    "synthetic_procedural_benign_expansion": 16,
+    "curated_indian_bank_telemetry": 9,
+    "cert_in_advisories_and_fir_records": 8,
+    "curated_upi_telemetry": 7,
+    "cybercrime_portal_telemetry": 5,
+    "customs_advisories_and_police_records": 4,
+    "fintech_fraud_bulletins": 4,
+    "kbc_police_fraud_warnings": 4,
+    "phishing_feed_curated": 2
+  }
+}

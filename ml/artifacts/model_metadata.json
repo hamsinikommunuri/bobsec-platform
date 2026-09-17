@@ -1,0 +1,30 @@
+{
+  "model_version": "bobsec-mlp-v1",
+  "model_type": "Multilayer Perceptron (MLPClassifier)",
+  "framework": "scikit-learn",
+  "training_timestamp": "2026-09-17T11:01:04Z",
+  "architecture": {
+    "input_features": 5797,
+    "hidden_layer_sizes": [
+      256,
+      128,
+      64
+    ],
+    "output_neurons": 2,
+    "activation": "relu",
+    "optimizer": "adam",
+    "learning_rate_init": 0.001,
+    "max_iter": 200,
+    "early_stopping": true,
+    "validation_fraction": 0.1,
+    "random_seed": 42
+  },
+  "training_results": {
+    "iterations_executed": 29,
+    "final_loss": 0.0008924823608391092,
+    "best_validation_score": 1.0,
+    "training_samples": 110,
+    "held_out_test_samples": 28,
+    "training_duration_seconds": 13.291
+  }
+}

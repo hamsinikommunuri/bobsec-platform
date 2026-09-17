@@ -5,6 +5,10 @@
   "outputDirectory": "stitch_bobsec_ai_scam_shield_platform/dist",
   "rewrites": [
     {
+      "source": "/api/ml/predict",
+      "destination": "/api/ml/predict.py"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/index.js"
     },
